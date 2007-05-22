@@ -1,0 +1,98 @@
+Revision history for Perl extension CGI::Simple.
+
+0.01  Thu Nov  1 12:21:48 2001
+    - original version; created by h2xs 1.21 with options
+        -X CGI::Simple
+
+0.02 Fri Dec 21 2001
+    - added cgi_error() if upload called but CONTENT_TYPE not multipart/form-data
+    - changed inernal storage names of globals by droping $
+    - added mod_perl notes re Selfloader and __DATA__ token
+    - as per suggestions from Curtis Poe
+
+0.03 Fri Apr 12 2002
+    - modifed test so skipping fork() test is noted as such
+    - allow '0' as a valid param name
+    - renamed concur.t to concur.test so that it does not rub by default
+    - added speed tests comparing CGI.pm to CGI::Simple in  the file
+      cgi-simple_vs_cgi-pm.html in the root dir
+
+0.04 Sat Apr 12 2002
+    - test bug on Solaris reported by robc@stamps.stortek.com and fixed
+
+0.05 Wed Nov 6 2002
+    - nasty upload bug reported (with solution) by Brandon Black fixed. Perl would
+      hang if upload terminated by browser before completion
+    - also odity with IO::file fixed (Brandon Black once again)
+
+0.06 Fri Nov 8 2002
+    - finally found someone with a solaris box to work out reason for
+      unexpected test failures. Thanks to John D. Robinson and Jeroen Latour
+      Details available at: http://www.perlmonks.org/index.pl?node_id=211401
+    - Removed another new bug relating to test scripts rather than core code
+      thanks to the combined effors of Perlmonks tommyw, grinder, Jaap, vek,
+      erasei, jlongino and strider_corinth
+0.07 Sat Aug 2 2003
+    - i admit to abject slackness, but anyway finally allocated a few hours
+      to apply a number of bug fixes which are (in no particular order)
+    - mod_perl compliant, patched by Mathew Albright
+        - still need to comment out use Selfloader and __DATA__ token
+        - still thinking about other solutions to this
+    - Blessed globs now possible in the constructor thanks to chromatic
+    - Unicode error  0xfe |  ($c >> 30) -> 0xfc | ($c >>30 ) fixed thanks to
+      Thomas L. Shinnick
+    - s/$value ||= 0/$value = defined $value ? $value : ''/ in raw_fetch() method
+      in Cookie.pm to allow value 0.
+    - Added missing $VERSION to Util.pm
+    - Added P3P support as suggested by Marc Bauer (parallels CGI.pm)
+        - updated header() and redirect() methods in Simple.pm
+0.071 Sat Aug 2 2003
+    - Oops, changed $VERSION to 0.007 not 0.07 so have to change to 0.071 to
+      upload again. ;-)
+    - no significant changes since 0.07 (aka 0.007) ;-)
+0.072 Tue Sept 9 2003
+    - Patched issue with large POSTs where data may not be on STDIN for single
+      read call. Bug exists in CGI.pm as well. Thanks to Jason Luther
+    - Added tests for slow post behaviour
+0.075 Tue June 1 2004
+    - Meant to upload 0.73 and 0.074 but just never got around to it
+    - Fixed upload hang bug in certain circumstances
+    - Added upload_fieldnames() method by request
+    - Added support for $fh = upload('field_name') but this has the issue
+      of what to do if 'field_name' is duplicated. You can only ever get one
+      fh from this method unlike the favoured approach using param() to get
+      the filename(s) which will let you get to all the files.
+    - José Micó deserves plaudits as does PodMaster.
+0.076
+    - Went missing in action.
+0.077 Tue 23 Nov 2004
+    - Bugfix patches.
+    - José Micó supplied patch that relates to character set allowed in headers.
+      TAB and high ascii chars are definitivelly allowed in headers, and not
+      accepting them prevents the upload of files with filenames like "España.txt".
+    - José Micó also notes that some versions of IE send extra boundaries in
+      POSTed data before real ones. New patch should be fix this IE issue.
+    - Lars Thegler supplied some patches.
+        - head2/head3 pod changed to head1/head2 for the benefit of some older
+          tools that exepect this.
+        - Resolved issue with manpages not being installed on FREEBSD via Makefile
+          hack
+    - Steve Purkis supplied a patch for a serious POST_MAX bug. A small modification
+      to control flow was used instead but this was a serious bug. If you are reading
+      this you are probably upgrading which is good.
+
+0.078 2007-01-09
+    - Maintenance release by Andy Armstrong <andy@hexten.net>
+    - Rewrote tests to use Test::More
+    - Implemented mod_perl 2 support
+
+0.080 2007-03-30
+    - Fixed problem parsing query args containing '='. Thanks to Ewan
+      Edwards for the patch.
+      
+0.081 2007-05-20
+    - Fix for sysread under mod_perl. Thanks to Joshua N Pritikin for
+      the patch.
+
+0.082 2007-05-22
+    - Added REST support. Thanks to Mike Barry for the patch.

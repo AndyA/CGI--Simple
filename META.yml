@@ -1,0 +1,28 @@
+---
+name: CGI-Simple
+version: 0.078
+author:
+  - 'Andy Armstrong <andy@hexten.net>'
+abstract: A Simple totally OO CGI interface that is CGI.pm compliant
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  Test::More: 0
+  version: 0
+provides:
+  CGI::Simple:
+    file: lib/CGI/Simple.pm
+    version: 0.078
+  CGI::Simple::Cookie:
+    file: lib/CGI/Simple/Cookie.pm
+    version: 0.03
+  CGI::Simple::Standard:
+    file: lib/CGI/Simple/Standard.pm
+  CGI::Simple::Util:
+    file: lib/CGI/Simple/Util.pm
+    version: 0.03
+generated_by: Module::Build version 0.2805
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
