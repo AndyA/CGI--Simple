@@ -96,3 +96,8 @@ Revision history for Perl extension CGI::Simple.
 
 0.082 2007-05-22
     - Added REST support. Thanks to Mike Barry for the patch.
+
+0.83  2007-05-22
+    - Big version jump to move version past badly formatted version in
+      Cookie, Util.
+    

@@ -14,7 +14,7 @@ use vars qw(
   $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "0.082";
+$VERSION = "0.83";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -445,6 +445,10 @@ sub _parse_keywordlist {
 
 sub _parse_multipart {
     my $self = shift;
+    
+    # TODO: See 14838. We /could/ have a heuristic here for the case
+    # where no boundary is supplied.
+
     my ( $boundary ) = $ENV{'CONTENT_TYPE'} =~ /boundary=\"?([^\";,]+)\"?/;
     unless ( $boundary ) {
         $self->cgi_error( '400 No boundary supplied for multipart/form-data' );
@@ -453,7 +457,8 @@ sub _parse_multipart {
 
     # BUG: IE 3.01 on the Macintosh uses just the boundary, forgetting the --
     $boundary = '--' . $boundary
-      unless $ENV{'HTTP_USER_AGENT'} =~ m/MSIE\s+3\.0[12];\s*Mac/i;
+      unless exists $ENV{'HTTP_USER_AGENT'} && $ENV{'HTTP_USER_AGENT'} =~ m/MSIE\s+3\.0[12];\s*Mac/i;
+      
     $boundary = quotemeta $boundary;
     my $got_data = 0;
     my $data     = '';
@@ -1404,7 +1409,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 0.082.
+This document describes CGI::Simple version 0.83.
 
 =head1 SYNOPSIS
 
