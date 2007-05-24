@@ -100,4 +100,8 @@ Revision history for Perl extension CGI::Simple.
 0.83  2007-05-22
     - Big version jump to move version past badly formatted version in
       Cookie, Util.
-    
+
+1.0  2007-05-24
+   - Another big version jump. I think we're about ready for 1.0.
+   - Fixed skip count under Win32 in t/40.request.t [27257]. Thanks to
+     ISHIGAKI for the patch.

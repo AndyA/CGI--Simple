@@ -135,7 +135,7 @@ $p->{bar} = join("\0", qw(foo bar baz));
 is(join(' ', $q->param('bar')), 'foo bar baz', 'tied interface store');
 
 SKIP: {
-    skip "Fork not available on this platform", 3
+    skip "Fork not available on this platform", 7
         unless $Config{d_fork};
 
     # test posting
