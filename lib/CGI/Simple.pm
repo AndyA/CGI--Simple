@@ -3903,7 +3903,7 @@ modify it under the same terms as Perl itself. See L<perlartistic>.
 =head1 SEE ALSO
 
 B<CGI>, L<CGI::Simple::Standard>, L<CGI::Simple::Cookie>,
-L<CGI::Simple::Util>
+L<CGI::Simple::Util>, L<CGI::Minimal>
 
 =cut
 
