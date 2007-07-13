@@ -14,7 +14,7 @@ use vars qw(
   $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "1.0";
+$VERSION = "1.1";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -370,8 +370,8 @@ sub _read_parse {
         }
     }
     elsif ( $method eq 'GET' or $method eq 'HEAD' ) {
-        $data =
-            $self->{'.mod_perl'}
+        $data
+          = $self->{'.mod_perl'}
           ? $self->_mod_perl_request()->args()
           : $ENV{'QUERY_STRING'}
           || $ENV{'REDIRECT_QUERY_STRING'}
@@ -386,12 +386,13 @@ sub _read_parse {
         }
 
         unless ( $data ) {
-            # I liked this reporting but CGI.pm does not behave like this so
-            # out it goes......
-            # $self->cgi_error("400 No data received via method: $method, type: $type");
+
+    # I liked this reporting but CGI.pm does not behave like this so
+    # out it goes......
+    # $self->cgi_error("400 No data received via method: $method, type: $type");
             return;
         }
-    
+
         $self->_parse_params( $data );
     }
 }
@@ -445,7 +446,7 @@ sub _parse_keywordlist {
 
 sub _parse_multipart {
     my $self = shift;
-    
+
     # TODO: See 14838. We /could/ have a heuristic here for the case
     # where no boundary is supplied.
 
@@ -457,8 +458,9 @@ sub _parse_multipart {
 
     # BUG: IE 3.01 on the Macintosh uses just the boundary, forgetting the --
     $boundary = '--' . $boundary
-      unless exists $ENV{'HTTP_USER_AGENT'} && $ENV{'HTTP_USER_AGENT'} =~ m/MSIE\s+3\.0[12];\s*Mac/i;
-      
+      unless exists $ENV{'HTTP_USER_AGENT'}
+      && $ENV{'HTTP_USER_AGENT'} =~ m/MSIE\s+3\.0[12];\s*Mac/i;
+
     $boundary = quotemeta $boundary;
     my $got_data = 0;
     my $data     = '';
@@ -579,8 +581,8 @@ sub crlf {
     unless ( $self->{'.crlf'} ) {
         my $OS = $^O
           || do { require Config; $Config::Config{'osname'} };
-        $self->{'.crlf'} =
-            ( $OS =~ m/VMS/i ) ? "\n"
+        $self->{'.crlf'}
+          = ( $OS =~ m/VMS/i ) ? "\n"
           : ( "\t" ne "\011" ) ? "\r\n"
           :                      "\015\012";
     }
@@ -702,8 +704,8 @@ sub append {
 sub delete {
     my ( $self, $param ) = @_;
     return () unless defined $param;
-    $param =
-      $param =~ m/^-name$/i
+    $param
+      = $param =~ m/^-name$/i
       ? shift
       : $param;                    # allow delete(-name=>'foo') syntax
     return undef unless defined $self->{$param};
@@ -945,7 +947,7 @@ sub header {
       = CGI::Simple::Util::rearrange(
         [
             [ 'TYPE',   'CONTENT_TYPE', 'CONTENT-TYPE' ], 'STATUS',
-            [ 'COOKIE', 'COOKIES' ],    'TARGET',
+            [ 'COOKIE', 'COOKIES',      'SET-COOKIE' ],   'TARGET',
             'EXPIRES', 'NPH',
             'CHARSET', 'ATTACHMENT',
             'P3P'
@@ -985,8 +987,8 @@ sub header {
     if ( $cookie ) {
         my @cookie = ref $cookie eq 'ARRAY' ? @{$cookie} : $cookie;
         for my $cookie ( @cookie ) {
-            my $cs =
-              ref $cookie eq 'CGI::Simple::Cookie'
+            my $cs
+              = ref $cookie eq 'CGI::Simple::Cookie'
               ? $cookie->as_string
               : $cookie;
             push @header, "Set-Cookie: $cs" if $cs;
@@ -1136,7 +1138,7 @@ sub cgi_error {
     my ( $self, $err ) = @_;
     if ( $err ) {
         $self->{'.cgi_error'} = $err;
-        $self->{'.globals'}->{'FATAL'} == 1     ? croak $err
+            $self->{'.globals'}->{'FATAL'} == 1 ? croak $err
           : $self->{'.globals'}->{'FATAL'} == 0 ? carp $err
           :                                       return $err;
     }
@@ -1153,7 +1155,8 @@ sub ReadParse {
     my $q = &_shift_if_ref || new CGI::Simple;
     my $pkg = caller();
     no strict 'refs';
-    *in = @_
+    *in
+      = @_
       ? $_[0]
       : *{"${pkg}::in"};    # set *in to passed glob or export *in
     %in = $q->Vars;
@@ -1207,7 +1210,8 @@ sub CgiDie { CgiError( @_ ); die @_ }
 
 sub CgiError {
     &_shift_if_ref;
-    @_ = @_
+    @_
+      = @_
       ? @_
       : ( "Error: script " . MyFullUrl() . " encountered fatal error\n" );
     print PrintHeader(), HtmlTop( shift ), ( map { "<p>$_</p>\n" } @_ ),
@@ -1409,7 +1413,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 1.0.
+This document describes CGI::Simple version 1.1.
 
 =head1 SYNOPSIS
 

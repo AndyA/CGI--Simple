@@ -105,3 +105,7 @@ Revision history for Perl extension CGI::Simple.
    - Another big version jump. I think we're about ready for 1.0.
    - Fixed skip count under Win32 in t/40.request.t [27257]. Thanks to
      ISHIGAKI for the patch.
+
+1.1  2007-07-13
+   - Added support for Set-Cookie as per CGI.pm patch 15065. Thanks to
+     Patrick M. Jordan for the suggestion.

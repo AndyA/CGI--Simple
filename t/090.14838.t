@@ -22,7 +22,7 @@ BEGIN {
 my $req = HTTP::Request::Common::POST(
     '/dummy_location',
     Content_Type => 'form-data',
-    Content      => [ test_file => ["t/90.14838.t"], ]
+    Content      => [ test_file => ["t/090.14838.t"], ]
 );
 
 # Useful in simulating an upload.
