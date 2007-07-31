@@ -7,7 +7,7 @@ use vars qw( $VERSION $USE_CGI_PM_DEFAULTS $DISABLE_UPLOADS $POST_MAX
   $NO_UNDEF_PARAMS $USE_PARAM_SEMICOLONS $HEADERS_ONCE
   $NPH $DEBUG $NO_NULL $FATAL *in %EXPORT_TAGS $AUTOLOAD );
 
-$VERSION = "1.2";
+$VERSION = "1.103";
 
 %EXPORT_TAGS = (
     ':html'     => [qw(:misc)],
@@ -53,9 +53,9 @@ $VERSION = "1.2";
     ]
 );
 
-BEGIN {
-    $SIG{__DIE__} = sub { croak "Undefined Method : @_\n" }
-}
+# BEGIN {
+#     $SIG{__DIE__} = sub { croak "Undefined Method : @_\n" }
+# }
 
 sub import {
     my ( $self, @args ) = @_;
@@ -391,10 +391,13 @@ As this is 0.01 there are almost bound to be some.
 =head1 AUTHOR
 
 Dr James Freeman E<lt>jfreeman@tassie.net.auE<gt>
+This release by Andy Armstrong <andy@hexten.net>
 
 This package is free software and is provided "as is" without express or
 implied warranty. It may be used, redistributed and/or modified under the terms
 of the Perl Artistic License (see http://www.perl.com/perl/misc/Artistic.html)
+
+Address bug reports and comments to: andy@hexten.net
 
 =head1 CREDITS
 

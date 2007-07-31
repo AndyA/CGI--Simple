@@ -14,7 +14,7 @@ use vars qw(
   $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "1.2";
+$VERSION = "1.103";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -1407,7 +1407,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 1.2.
+This document describes CGI::Simple version 1.103.
 
 =head1 SYNOPSIS
 
@@ -3875,6 +3875,8 @@ Perl, the name and version of your Web server, and the name and
 version of the operating system you are using.  If the problem is even
 remotely browser dependent, please provide information about the
 affected browsers as well.
+
+Address bug reports and comments to: andy@hexten.net
 
 =head1 CREDITS
 
