@@ -109,3 +109,11 @@ Revision history for Perl extension CGI::Simple.
 1.1  2007-07-13
    - Added support for Set-Cookie as per CGI.pm patch 15065. Thanks to
      Patrick M. Jordan for the suggestion.
+
+1.1.1   2007-07-31
+      - Removed nasty global trap of __DIE__ in CGI::Standard. Thanks to
+        Jeremy Morton for reporting it.
+
+1.1.2   2007-07-31
+      - Fixed module names in POD for CGI::Simple::Cookie,
+        CGI::Simple::Util [#27597]. Thanks to BRICAS for reporting it.
