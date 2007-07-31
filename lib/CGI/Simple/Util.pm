@@ -1,7 +1,7 @@
 package CGI::Simple::Util;
 use strict;
 use vars qw( $VERSION @EXPORT_OK @ISA $UTIL );
-$VERSION = '1.1.3';
+$VERSION = '1.103';
 require Exporter;
 @ISA       = qw( Exporter );
 @EXPORT_OK = qw(

@@ -117,3 +117,7 @@ Revision history for Perl extension CGI::Simple.
 1.1.2   2007-07-31
       - Fixed module names in POD for CGI::Simple::Cookie,
         CGI::Simple::Util [#27597]. Thanks to BRICAS for reporting it.
+
+1.103   2007-07-31
+      - Version number chaos continues. One tends to forget that there
+        is a strange universe in which 1.1 > 1.1.2.
