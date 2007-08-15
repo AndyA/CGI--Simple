@@ -2,7 +2,7 @@
 # The only change is to change the use statement and change references
 # from CGI to CGI::Simple
 
-use Test::More tests => 38;
+use Test::More tests => 40;
 use strict;
 use warnings;
 use Config;
@@ -172,6 +172,22 @@ SKIP: {
     ok($q = new CGI::Simple, "CGI::Simple::new from POST");
 
     is($q->param('POSTDATA'), $test_string, "CGI::Simple::param('POSTDATA') from POST");
+
+    # test posting POSTDATA with nulls
+    $q->_reset_globals;
+    $test_string = "some nulls \0\0\0 are better than others \0\0\0";
+    $ENV{REQUEST_METHOD} = 'POST';
+    $ENV{CONTENT_LENGTH} = length($test_string);
+    $ENV{QUERY_STRING}   = '';
+    $ENV{CONTENT_TYPE}   = 'text/plain';
+    if (open(CHILD,"|-")) {  # cparent
+      print CHILD $test_string;
+      close CHILD;
+      exit 0;
+    }
+    ok($q = new CGI::Simple, "CGI::Simple::new from POST");
+
+    is($q->param('POSTDATA'), $test_string, "CGI::Simple::param('POSTDATA') from POST w/nulls");
 
     # test posting PUTDATA
     $q->_reset_globals;
