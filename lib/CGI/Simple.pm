@@ -3580,7 +3580,6 @@ Here is a complete list of all the CGI::Simple methods.
     import
     _reset_globals
     new
-    DESTROY
     _initialize
     _read_parse
     _parse_params
