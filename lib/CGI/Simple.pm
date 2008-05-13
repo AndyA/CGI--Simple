@@ -299,7 +299,7 @@ sub _internal_read($\$;$) {
         $r->read( $$buffer, $len );
     }
     else {
-        sysread( STDIN, $$buffer, $len );
+        read( STDIN, $$buffer, $len );
     }
 }
 
