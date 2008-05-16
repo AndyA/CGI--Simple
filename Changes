@@ -126,3 +126,7 @@ Revision history for Perl extension CGI::Simple.
       - Switched from sysread to read. Fixes #35844: sysread used in
         CGI::Simple blocks on re-directed STDIO reads. Thanks to
         Damjan Pelemis.
+
+1.105   2008-05-16
+      - Fixed skip count in t/040.request.t. Fixes #35945. Thanks
+        to snaury.
