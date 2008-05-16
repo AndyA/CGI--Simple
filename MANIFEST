@@ -8,7 +8,6 @@ Makefile.PL
 MANIFEST
 META.yml
 README
-session.vim
 t/000.load.t
 t/020.cookie.t
 t/030.function.t
