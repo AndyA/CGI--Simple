@@ -1,5 +1,4 @@
 use strict;
-use warnings;
 use Test::More;
 Test::More->builder->no_ending( 1 );
 use Config;

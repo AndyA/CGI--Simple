@@ -4,7 +4,6 @@
 
 use Test::More tests => 40;
 use strict;
-use warnings;
 use Config;
 
 use CGI::Simple ( -default );

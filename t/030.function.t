@@ -1,6 +1,5 @@
 use Test::More tests => 27;
 use strict;
-use warnings;
 use Config;
 
 use CGI::Simple::Standard qw(:all -default);

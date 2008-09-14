@@ -4,7 +4,6 @@
 
 use Test::More tests => 86;
 use strict;
-use warnings;
 use CGI::Simple::Util qw(escape unescape);
 use POSIX qw(strftime);
 

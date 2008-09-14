@@ -1,6 +1,5 @@
 use Test::More tests => 58;
 use strict;
-use warnings;
 
 use CGI::Simple::Util qw(escape unescape);
 

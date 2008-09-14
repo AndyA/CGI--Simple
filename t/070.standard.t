@@ -1,7 +1,6 @@
 use Test::More tests => 301;
 use Carp;
 use strict;
-use warnings;
 use vars qw(%field %in);
 
 use CGI::Simple::Standard qw( :all );
