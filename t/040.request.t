@@ -7,10 +7,10 @@ use strict;
 use warnings;
 use Config;
 
-use CGI::Simple (-default);
+use CGI::Simple ( -default );
 
 # Makes forked test work OK
-Test::More->builder->no_ending(1);
+Test::More->builder->no_ending( 1 );
 
 # Set up a CGI environment
 $ENV{REQUEST_METHOD}  = 'GET';
@@ -21,185 +21,180 @@ $ENV{SCRIPT_NAME}     = '/cgi-bin/foo.cgi';
 $ENV{SERVER_PROTOCOL} = 'HTTP/1.0';
 $ENV{SERVER_PORT}     = 8080;
 $ENV{SERVER_NAME}     = 'the.good.ship.lollypop.com';
-$ENV{REQUEST_URI} =
-    "$ENV{SCRIPT_NAME}$ENV{PATH_INFO}?$ENV{QUERY_STRING}";
+$ENV{REQUEST_URI}
+ = "$ENV{SCRIPT_NAME}$ENV{PATH_INFO}?$ENV{QUERY_STRING}";
 $ENV{HTTP_LOVE} = 'true';
 
 my $q = new CGI::Simple;
-ok($q, "CGI::Simple::new()");
-is($q->request_method, 'GET', "CGI::Simple::request_method()");
+ok( $q, "CGI::Simple::new()" );
+is( $q->request_method, 'GET', "CGI::Simple::request_method()" );
+
+is( $q->query_string, 'game=chess;game=checkers;weather=dull',
+  "CGI::Simple::query_string()" );
+
+is( $q->param(), 2, "CGI::Simple::param()" );
+is( join( ' ', sort $q->param() ),
+  'game weather', "CGI::Simple::param()" );
+is( $q->param( 'game' ),    'chess', "CGI::Simple::param()" );
+is( $q->param( 'weather' ), 'dull',  "CGI::Simple::param()" );
 
 is(
-    $q->query_string, 'game=chess;game=checkers;weather=dull',
-    "CGI::Simple::query_string()"
+  join( ' ', $q->param( 'game' ) ),
+  'chess checkers',
+  "CGI::Simple::param()"
 );
 
-is($q->param(), 2, "CGI::Simple::param()");
-is(join(' ', sort $q->param()), 'game weather', "CGI::Simple::param()");
-is($q->param('game'),    'chess', "CGI::Simple::param()");
-is($q->param('weather'), 'dull',  "CGI::Simple::param()");
+ok( $q->param( -name => 'foo', -value => 'bar' ),
+  'CGI::Simple::param() put' );
+
+is( $q->param( -name => 'foo' ), 'bar', 'CGI::Simple::param() get' );
 
 is(
-    join(' ', $q->param('game')),
-    'chess checkers',
-    "CGI::Simple::param()"
+  $q->query_string,
+  'game=chess;game=checkers;weather=dull;foo=bar',
+  "CGI::Simple::query_string() redux"
 );
 
-ok(
-    $q->param(-name => 'foo', -value => 'bar'),
-    'CGI::Simple::param() put'
-);
+is( $q->http( 'love' ), 'true', "CGI::Simple::http()" );
+is( $q->script_name, '/cgi-bin/foo.cgi', "CGI::Simple::script_name()" );
 
-is($q->param(-name => 'foo'), 'bar', 'CGI::Simple::param() get');
+is( $q->url, 'http://the.good.ship.lollypop.com:8080/cgi-bin/foo.cgi',
+  "CGI::Simple::url()" );
 
 is(
-    $q->query_string,
-    'game=chess;game=checkers;weather=dull;foo=bar',
-    "CGI::Simple::query_string() redux"
+  $q->self_url,
+  'http://the.good.ship.lollypop.com:8080/cgi-bin/foo.cgi/somewhere/else?'
+   . 'game=chess;game=checkers;weather=dull;foo=bar',
+  "CGI::Simple::url()"
 );
 
-is($q->http('love'), 'true', "CGI::Simple::http()");
-is($q->script_name, '/cgi-bin/foo.cgi', "CGI::Simple::script_name()");
+is( $q->url( -absolute => 1 ),
+  '/cgi-bin/foo.cgi', 'CGI::Simple::url(-absolute=>1)' );
+
+is( $q->url( -relative => 1 ),
+  'foo.cgi', 'CGI::Simple::url(-relative=>1)' );
+
+is( $q->url( -relative => 1, -path => 1 ),
+  'foo.cgi/somewhere/else', 'CGI::Simple::url(-relative=>1,-path=>1)' );
 
 is(
-    $q->url, 'http://the.good.ship.lollypop.com:8080/cgi-bin/foo.cgi',
-    "CGI::Simple::url()"
+  $q->url( -relative => 1, -path => 1, -query => 1 ),
+  'foo.cgi/somewhere/else?game=chess;game=checkers;weather=dull;foo=bar',
+  'CGI::Simple::url(-relative=>1,-path=>1,-query=>1)'
 );
 
-is(
-    $q->self_url,
-    'http://the.good.ship.lollypop.com:8080/cgi-bin/foo.cgi/somewhere/else?' .
-    'game=chess;game=checkers;weather=dull;foo=bar',
-    "CGI::Simple::url()"
-);
-
-is(
-    $q->url(-absolute => 1),
-    '/cgi-bin/foo.cgi', 'CGI::Simple::url(-absolute=>1)'
-);
-
-is(
-    $q->url(-relative => 1), 'foo.cgi',
-    'CGI::Simple::url(-relative=>1)'
-);
-
-is(
-    $q->url(-relative => 1, -path => 1),
-    'foo.cgi/somewhere/else',
-    'CGI::Simple::url(-relative=>1,-path=>1)'
-);
-
-is(
-    $q->url(-relative => 1, -path => 1, -query => 1),
-    'foo.cgi/somewhere/else?game=chess;game=checkers;weather=dull;foo=bar',
-    'CGI::Simple::url(-relative=>1,-path=>1,-query=>1)'
-);
-
-$q->delete('foo');
-ok(!$q->param('foo'), 'CGI::Simple::delete()');
+$q->delete( 'foo' );
+ok( !$q->param( 'foo' ), 'CGI::Simple::delete()' );
 
 $q->_reset_globals;
 $ENV{QUERY_STRING} = 'mary+had+a+little+lamb';
 
-ok($q = new CGI::Simple, "CGI::Simple::new() redux");
+ok( $q = new CGI::Simple, "CGI::Simple::new() redux" );
 
 is(
-    join(' ', $q->keywords),
-    'mary had a little lamb',
-    'CGI::Simple::keywords'
+  join( ' ', $q->keywords ),
+  'mary had a little lamb',
+  'CGI::Simple::keywords'
 );
 
 is(
-    join(' ', $q->param('keywords')),
-    'mary had a little lamb',
-    'CGI::Simple::keywords'
+  join( ' ', $q->param( 'keywords' ) ),
+  'mary had a little lamb',
+  'CGI::Simple::keywords'
 );
 
-ok $q = new CGI::Simple('foo=bar=baz'), 'CGI::Simple::new(), equals in value';
-is $q->param('foo'), 'bar=baz', 'parsed parameter containing equals';
+ok $q = new CGI::Simple( 'foo=bar=baz' ),
+ 'CGI::Simple::new(), equals in value';
+is $q->param( 'foo' ), 'bar=baz', 'parsed parameter containing equals';
 
-ok($q = new CGI::Simple('foo=bar&foo=baz'), "CGI::Simple::new() redux");
-is($q->param('foo'), 'bar', 'CGI::Simple::param() redux');
+ok( $q = new CGI::Simple( 'foo=bar&foo=baz' ),
+  "CGI::Simple::new() redux" );
+is( $q->param( 'foo' ), 'bar', 'CGI::Simple::param() redux' );
 
-ok(
-    $q = new CGI::Simple({'foo' => 'bar', 'bar' => 'froz'}),
-    "CGI::Simple::new() redux 2"
-);
+ok( $q = new CGI::Simple( { 'foo' => 'bar', 'bar' => 'froz' } ),
+  "CGI::Simple::new() redux 2" );
 
-is($q->param('bar'), 'froz', "CGI::Simple::param() redux 2");
+is( $q->param( 'bar' ), 'froz', "CGI::Simple::param() redux 2" );
 
 # test tied interface
 my $p = $q->Vars;
-is($p->{bar}, 'froz', "tied interface fetch");
-$p->{bar} = join("\0", qw(foo bar baz));
-is(join(' ', $q->param('bar')), 'foo bar baz', 'tied interface store');
+is( $p->{bar}, 'froz', "tied interface fetch" );
+$p->{bar} = join( "\0", qw(foo bar baz) );
+is( join( ' ', $q->param( 'bar' ) ),
+  'foo bar baz', 'tied interface store' );
 
 SKIP: {
-    skip "Fork not available on this platform", 9
-        unless $Config{d_fork};
+  skip "Fork not available on this platform", 9
+   unless $Config{d_fork};
 
-    # test posting
-    $q->_reset_globals;
+  # test posting
+  $q->_reset_globals;
 
-    my $test_string = 'game=soccer&game=baseball&weather=nice';
-    $ENV{REQUEST_METHOD} = 'POST';
-    $ENV{CONTENT_LENGTH} = length($test_string);
-    $ENV{QUERY_STRING}   = 'big_balls=basketball&small_balls=golf';
-    $ENV{CONTENT_TYPE}   = 'application/x-www-form-urlencoded';
-    if (open(CHILD, "|-")) {    # cparent
-        print CHILD $test_string;
-        close CHILD;
-        exit 0;
-    }
+  my $test_string = 'game=soccer&game=baseball&weather=nice';
+  $ENV{REQUEST_METHOD} = 'POST';
+  $ENV{CONTENT_LENGTH} = length( $test_string );
+  $ENV{QUERY_STRING}   = 'big_balls=basketball&small_balls=golf';
+  $ENV{CONTENT_TYPE}   = 'application/x-www-form-urlencoded';
+  if ( open( CHILD, "|-" ) ) {    # cparent
+    print CHILD $test_string;
+    close CHILD;
+    exit 0;
+  }
 
-    # at this point, we're in a new (child) process
-    ok($q = new CGI::Simple, "CGI::Simple::new() from POST");
-    is($q->param('weather'), 'nice', "CGI::Simple::param() from POST");
-    is($q->url_param('big_balls'), 'basketball', "CGI::url_param()");
+  # at this point, we're in a new (child) process
+  ok( $q = new CGI::Simple, "CGI::Simple::new() from POST" );
+  is( $q->param( 'weather' ), 'nice',
+    "CGI::Simple::param() from POST" );
+  is( $q->url_param( 'big_balls' ), 'basketball', "CGI::url_param()" );
 
-    # test posting POSTDATA
-    $q->_reset_globals;
-    $test_string = '<post><game>soccer</game><game>baseball</game><weather>nice</weather></post>';
-    $ENV{REQUEST_METHOD} = 'POST';
-    $ENV{CONTENT_LENGTH} = length($test_string);
-    $ENV{QUERY_STRING}   = '';
-    $ENV{CONTENT_TYPE}   = 'text/xml';
-    if (open(CHILD,"|-")) {  # cparent
-      print CHILD $test_string;
-      close CHILD;
-      exit 0;
-    }
-    ok($q = new CGI::Simple, "CGI::Simple::new from POST");
+  # test posting POSTDATA
+  $q->_reset_globals;
+  $test_string
+   = '<post><game>soccer</game><game>baseball</game><weather>nice</weather></post>';
+  $ENV{REQUEST_METHOD} = 'POST';
+  $ENV{CONTENT_LENGTH} = length( $test_string );
+  $ENV{QUERY_STRING}   = '';
+  $ENV{CONTENT_TYPE}   = 'text/xml';
+  if ( open( CHILD, "|-" ) ) {    # cparent
+    print CHILD $test_string;
+    close CHILD;
+    exit 0;
+  }
+  ok( $q = new CGI::Simple, "CGI::Simple::new from POST" );
 
-    is($q->param('POSTDATA'), $test_string, "CGI::Simple::param('POSTDATA') from POST");
+  is( $q->param( 'POSTDATA' ),
+    $test_string, "CGI::Simple::param('POSTDATA') from POST" );
 
-    # test posting POSTDATA with nulls
-    $q->_reset_globals;
-    $test_string = "some nulls \0\0\0 are better than others \0\0\0";
-    $ENV{REQUEST_METHOD} = 'POST';
-    $ENV{CONTENT_LENGTH} = length($test_string);
-    $ENV{QUERY_STRING}   = '';
-    $ENV{CONTENT_TYPE}   = 'text/plain';
-    if (open(CHILD,"|-")) {  # cparent
-      print CHILD $test_string;
-      close CHILD;
-      exit 0;
-    }
-    ok($q = new CGI::Simple, "CGI::Simple::new from POST");
+  # test posting POSTDATA with nulls
+  $q->_reset_globals;
+  $test_string = "some nulls \0\0\0 are better than others \0\0\0";
+  $ENV{REQUEST_METHOD} = 'POST';
+  $ENV{CONTENT_LENGTH} = length( $test_string );
+  $ENV{QUERY_STRING}   = '';
+  $ENV{CONTENT_TYPE}   = 'text/plain';
+  if ( open( CHILD, "|-" ) ) {    # cparent
+    print CHILD $test_string;
+    close CHILD;
+    exit 0;
+  }
+  ok( $q = new CGI::Simple, "CGI::Simple::new from POST" );
 
-    is($q->param('POSTDATA'), $test_string, "CGI::Simple::param('POSTDATA') from POST w/nulls");
+  is( $q->param( 'POSTDATA' ),
+    $test_string, "CGI::Simple::param('POSTDATA') from POST w/nulls" );
 
-    # test posting PUTDATA
-    $q->_reset_globals;
-    $test_string = '<put><game>soccer</game><game>baseball</game><weather>nice</weather></put>';
-    $ENV{REQUEST_METHOD}='PUT';
-    $ENV{CONTENT_LENGTH}=length($test_string);
-    $ENV{CONTENT_TYPE}='text/xml';
-    if (open(CHILD,"|-")) {  # cparent
-      print CHILD $test_string;
-      close CHILD;
-      exit 0;
-    }
-    ok($q = new CGI::Simple, "CGI::Simple::new from PUT");
-    is($q->param('PUTDATA'), $test_string, "CGI::Simple::param('POSTDATA') from POST");
+  # test posting PUTDATA
+  $q->_reset_globals;
+  $test_string
+   = '<put><game>soccer</game><game>baseball</game><weather>nice</weather></put>';
+  $ENV{REQUEST_METHOD} = 'PUT';
+  $ENV{CONTENT_LENGTH} = length( $test_string );
+  $ENV{CONTENT_TYPE}   = 'text/xml';
+  if ( open( CHILD, "|-" ) ) {    # cparent
+    print CHILD $test_string;
+    close CHILD;
+    exit 0;
+  }
+  ok( $q = new CGI::Simple, "CGI::Simple::new from PUT" );
+  is( $q->param( 'PUTDATA' ),
+    $test_string, "CGI::Simple::param('POSTDATA') from POST" );
 }
