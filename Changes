@@ -130,3 +130,10 @@ Revision history for Perl extension CGI::Simple.
 1.105   2008-05-16
       - Fixed skip count in t/040.request.t. Fixes #35945. Thanks
         to snaury.
+
+1.106   2008-09-14
+      - Added missing Apache2 modules. Refs #39146 and #38931. Thanks
+        to RSAVAGE.
+      - Applied BEROV's patch for UTF-8 form data handling. Refs #12481.
+        Thanks to BEROV.
+
