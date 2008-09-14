@@ -225,7 +225,9 @@ sub _initialize_mod_perl {
             $self->{'.mod_perl'} = 2;
 
             require Apache2::RequestRec;
+            require Apache2::RequestIO;
             require Apache2::RequestUtil;
+            require Apache2::Response;
             require APR::Pool;
 
             my $r = $self->_mod_perl_request();
