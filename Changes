@@ -134,4 +134,6 @@ Revision history for Perl extension CGI::Simple.
 1.106   2008-09-14
       - Added missing Apache2 modules. Refs #39146 and #38931. Thanks
         to RSAVAGE.
+      - Applied BEROV's patch for UTF-8 form data handling. Refs #12481.
+        Thanks to BEROV.
 

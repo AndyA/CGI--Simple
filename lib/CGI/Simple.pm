@@ -10,7 +10,7 @@ use Carp;
 
 use vars qw(
   $VERSION $USE_CGI_PM_DEFAULTS $DISABLE_UPLOADS $POST_MAX
-  $NO_UNDEF_PARAMS $USE_PARAM_SEMICOLONS $HEADERS_ONCE
+  $NO_UNDEF_PARAMS $USE_PARAM_SEMICOLONS $PARAM_UTF8 $HEADERS_ONCE
   $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
@@ -46,6 +46,10 @@ sub _initialize_globals {
     # separate the name=value pairs with ; rather than &
     $USE_PARAM_SEMICOLONS = 0
       unless defined $USE_PARAM_SEMICOLONS;
+    
+    # return everything as utf-8
+    $PARAM_UTF8 ||= 0;
+    $PARAM_UTF8 and require Encode;
 
     # only print headers once
     $HEADERS_ONCE = 0
@@ -82,6 +86,7 @@ sub _use_cgi_pm_global_settings {
     $DEBUG                = 1 unless defined $DEBUG;
     $NO_NULL              = 0 unless defined $NO_NULL;
     $FATAL                = -1 unless defined $FATAL;
+    $PARAM_UTF8           = 0 unless defined $PARAM_UTF8;
 }
 
 # this is called by new, we will never directly reference the globals again
@@ -98,6 +103,7 @@ sub _store_globals {
     $self->{'.globals'}->{'NO_NULL'}              = $NO_NULL;
     $self->{'.globals'}->{'FATAL'}                = $FATAL;
     $self->{'.globals'}->{'USE_CGI_PM_DEFAULTS'}  = $USE_CGI_PM_DEFAULTS;
+    $self->{'.globals'}->{'PARAM_UTF8'}           = $PARAM_UTF8;
 }
 
 # use the automatic calling of the import sub to set our pragmas. CGI.pm compat
@@ -422,6 +428,8 @@ sub _add_param {
           if $value eq ''
           and $self->{'.globals'}->{'NO_UNDEF_PARAMS'};
         $value =~ tr/\000//d if $self->{'.globals'}->{'NO_NULL'};
+        $value = Encode::decode(utf8=> $value) 
+            if $self->{'.globals'}->{PARAM_UTF8};
         push @{ $self->{$param} }, $value;
         unless ( $self->{'.fieldnames'}->{$param} ) {
             push @{ $self->{'.parameters'} }, $param;
