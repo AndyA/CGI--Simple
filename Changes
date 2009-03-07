@@ -148,3 +148,7 @@ Revision history for Perl extension CGI::Simple.
         from CGI.pm (Mark Stosberg)
       - Support cookies in which one of multiple values is empty. Ported
         from CGI.pm (Mark Stosberg)
+      - Fixed bug when calling unescapeHTML on HTML that wasn't
+        properly escaped in the first place. Thanks to M-Uchino and
+        Mark Stosberg.
+

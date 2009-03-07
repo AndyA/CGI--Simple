@@ -152,7 +152,7 @@ sub unescapeHTML {
         /^#(\d+)$/         && $ebcdic ? chr($UTIL->{'a2e'}->[$1]) :
         /^#x([0-9a-f]+)$/i && $latin  ? chr(hex($1)) :
         /^#x([0-9a-f]+)$/i && $ebcdic ? chr($UTIL->{'a2e'}->[hex $1]) :
-        $_
+        "\&$_;"
     }gex;
   return $unescape;
 }

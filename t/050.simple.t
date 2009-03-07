@@ -1,4 +1,4 @@
-use Test::More tests => 331;
+use Test::More tests => 332;
 use Carp;
 use strict;
 use vars qw(%field %in);
@@ -755,6 +755,13 @@ is( $sv, undef, 'unescapeHTML(), 1' );
 $sv = $q->unescapeHTML(
   "&lt;&gt;&amp;&quot;&#10;&#13;&lt;&gt;&amp;&quot;&#10;&#13;" );
 is( $sv, "<>&\"\012\015<>&\"\012\015", 'unescapeHTML(), 2' );
+$sv = $q->unescapeHTML(
+  'Jack & Jill went up the hill; to get a pail of water' );
+is(
+  $sv,
+  'Jack & Jill went up the hill; to get a pail of water',
+  'unescapeHTML(), 3 '
+);
 
 # put()
 is( $q->put( '' ), 1, 'put(), 1' );
