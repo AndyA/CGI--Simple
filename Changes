@@ -151,4 +151,5 @@ Revision history for Perl extension CGI::Simple.
       - Fixed bug when calling unescapeHTML on HTML that wasn't
         properly escaped in the first place. Thanks to M-Uchino and
         Mark Stosberg.
+      - Removed bogus dependency on version.pm.
 
