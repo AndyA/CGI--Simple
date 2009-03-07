@@ -137,3 +137,6 @@ Revision history for Perl extension CGI::Simple.
       - Applied BEROV's patch for UTF-8 form data handling. Refs #12481.
         Thanks to BEROV.
 
+1.107   2009-03-07
+      - Correctly trim leading /and/ trailing spaces from cookies.
+

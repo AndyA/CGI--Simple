@@ -31,7 +31,9 @@ sub parse {
   my %results;
   my @pairs = split "; ?", $raw_cookie;
   for my $pair ( @pairs ) {
-    $pair =~ s/^\s+|\s+$//;    # trim leading trailing whitespace
+    # trim leading trailing whitespace
+    $pair =~ s/^\s+//;
+    $pair =~ s/\s+$//;
     my ( $key, $value ) = split "=", $pair;
     next unless defined $value;
     my @values = map { unescape( $_ ) } split /[&;]/, $value;
