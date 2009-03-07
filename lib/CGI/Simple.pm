@@ -450,26 +450,26 @@ sub _parse_keywordlist {
   return @keywords;
 }
 
-sub _parse_multipart {
-  my $self = shift;
+sub _massage_boundary {
+  my ( $self, $boundary ) = @_;
 
-  # TODO: See 14838. We /could/ have a heuristic here for the case
-  # where no boundary is supplied.
-
-  my ( $boundary )
-   = $ENV{'CONTENT_TYPE'} =~ /boundary=\"?([^\";,]+)\"?/;
-  unless ( $boundary ) {
-    $self->cgi_error(
-      '400 No boundary supplied for multipart/form-data' );
-    return 0;
-  }
-
-# BUG: IE 3.01 on the Macintosh uses just the boundary, forgetting the --
+  # BUG: IE 3.01 on the Macintosh uses just the boundary,
+  # forgetting the --
   $boundary = '--' . $boundary
    unless exists $ENV{'HTTP_USER_AGENT'}
      && $ENV{'HTTP_USER_AGENT'} =~ m/MSIE\s+3\.0[12];\s*Mac/i;
 
-  $boundary = quotemeta $boundary;
+  return quotemeta $boundary;
+}
+
+sub _parse_multipart {
+  my $self = shift;
+
+  my ( $boundary )
+   = $ENV{'CONTENT_TYPE'} =~ /boundary=\"?([^\";,]+)\"?/;
+
+  $boundary = $self->_massage_boundary( $boundary ) if $boundary;
+
   my $got_data = 0;
   my $data     = '';
   my $length   = $ENV{'CONTENT_LENGTH'} || 0;
@@ -481,6 +481,20 @@ sub _parse_multipart {
     last READ unless _internal_read( $self, my $buffer );
     $data .= $buffer;
     $got_data += length $buffer;
+
+    unless ( $boundary ) {
+      # If we're going to guess the boundary we need a complete line.
+      next READ unless $data =~ /^(.*)$CRLF/o;
+      $boundary = $1;
+
+      # Still no boundary? Give up...
+      unless ( $boundary ) {
+        $self->cgi_error(
+          '400 No boundary supplied for multipart/form-data' );
+        return 0;
+      }
+      $boundary = $self->_massage_boundary($boundary);
+    }
 
     BOUNDARY:
 
@@ -496,6 +510,7 @@ sub _parse_multipart {
       my ( $param ) = $unfold =~ m/form-data;\s+name="?([^\";]*)"?/;
       my ( $filename )
        = $unfold =~ m/name="?\Q$param\E"?;\s+filename="?([^\"]*)"?/;
+
       if ( defined $filename ) {
         my ( $mime ) = $unfold =~ m/Content-Type:\s+([-\w\/]+)/io;
         $data =~ s/^\Q$header\E//;

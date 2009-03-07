@@ -152,4 +152,6 @@ Revision history for Perl extension CGI::Simple.
         properly escaped in the first place. Thanks to M-Uchino and
         Mark Stosberg.
       - Removed bogus dependency on version.pm.
+      - Add heuristic to upload to handle the case where no boundary is
+        specified in CONTENT_TYPE. See #14838.
 
