@@ -138,5 +138,13 @@ Revision history for Perl extension CGI::Simple.
         Thanks to BEROV.
 
 1.107   2009-03-07
-      - Correctly trim leading /and/ trailing spaces from cookies.
-
+      - CGI::Simple::Cookie, fixed bug when cookie had both leading and
+        trailing white space (RT#34314, Ron Savage and Mark Stosberg)
+      - Accept a comma as well as semi-colon as a cookie separator. This
+        is consistent with CGI.pm as well as RFC 2965, which states: "A
+        server SHOULD also accept comma (,) as the separator between cookie-
+        values for future compatibility." (Mark Stosberg)
+      - Support cookies which have an equals sign in the value. Ported
+        from CGI.pm (Mark Stosberg)
+      - Support cookies in which one of multiple values is empty. Ported
+        from CGI.pm (Mark Stosberg)

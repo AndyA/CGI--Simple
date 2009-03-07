@@ -29,14 +29,18 @@ sub parse {
   my ( $self, $raw_cookie ) = @_;
   return () unless $raw_cookie;
   my %results;
-  my @pairs = split "; ?", $raw_cookie;
+  my @pairs = split "[;,] ?", $raw_cookie;
   for my $pair ( @pairs ) {
     # trim leading trailing whitespace
     $pair =~ s/^\s+//;
     $pair =~ s/\s+$//;
-    my ( $key, $value ) = split "=", $pair;
-    next unless defined $value;
-    my @values = map { unescape( $_ ) } split /[&;]/, $value;
+    my ( $key, $value ) = split( "=", $pair, 2 );
+    next if !defined( $value );
+    my @values = ();
+    if ( $value ne '' ) {
+      @values = map unescape( $_ ), split( /[&;]/, $value . '&dmy' );
+      pop @values;
+    }
     $key = unescape( $key );
 
     # A bug in Netscape can cause several cookies with same name to
