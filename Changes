@@ -155,3 +155,6 @@ Revision history for Perl extension CGI::Simple.
       - Add heuristic to upload to handle the case where no boundary is
         specified in CONTENT_TYPE. See #14838.
 
+1.108   2009-03-13
+      - Remove bogus references to Selfloader in documenation. No
+        functional changes.

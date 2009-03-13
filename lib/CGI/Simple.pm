@@ -639,16 +639,6 @@ sub param {
   return wantarray ? @{ $self->{$param} } : $self->{$param}->[0];
 }
 
-#1;
-
-###############   The following methods only loaded on demand   ###############
-###############  Move commonly used methods above the __DATA__  ###############
-############### token if you are into recreational optimization ###############
-###############  You can not use Selfloader and the __DATA__    ###############
-###############   token under mod_perl, so comment token out    ###############
-
-#__DATA__
-
 # a new method that provides access to a new internal routine. Useage:
 # $q->add_param( $param, $value, $overwrite )
 # $param must be a plain scalar
@@ -3365,40 +3355,13 @@ Unlike CGI.pm all the cgi-lib.pl functions from Version 2.18 are supported:
     CgiDie()
     CgiError()
 
-=cut
-
-############### Compatibility with mod_perl ################
-
-=head1 COMPATIBILITY WITH mod_perl
-
-This module uses Selfloader and the __DATA__ token to ensure that only code
-that is used gets complied. This optimises performance but means that it
-will not work under mod_perl in its default configuration. To configure it
-to run under mod perl you would need to remove two lines from the module.
-
-    use Selfloader;
-
-    ....
-
-    __DATA__
-
-With these two lines gone the entire module will load and compile at mod_perl
-startup. CGI::Simple's pure OO methods return data significantly faster than
-CGI.pm's OO methods
-
-=cut
-
-############### Compatibility with CGI.pm ################
-
 =head1 COMPATIBILITY WITH CGI.pm
 
 I has long been suggested that the CGI and HTML parts of CGI.pm should be
 split into separate modules (even the author suggests this!), CGI::Simple
 represents the realization of this and contains the complete CGI side of
 CGI.pm. Code-wise it weighs in at a little under 30% of the size of CGI.pm at
-a little under 1000 lines. It uses SelfLoader and only compiles the first 350
-lines. Other routines are loaded on first use. Internally around half the
-code is new although the method interfaces remain unchanged.
+a little under 1000 lines.
 
 A great deal of care has been taken to ensure that the interface remains
 unchanged although a few tweaks have been made. The test suite is extensive
@@ -3426,17 +3389,7 @@ from running the script on CGI.pm:
 
 =head1 DIFFERENCES FROM CGI.pm
 
-CGI::Simple is strict and warnings compliant. SelfLoader is used to load only
-the required code. You can easily optimize code loading simply by moving the
-__DATA__ token. Commonly called methods should go above the token and will
-be compiled at compile time (on load). Uncommonly used methods go below the
-__DATA__ token and will only be compiled as required at runtime when the
-method is actually called.
-
-As well as using SelfLoader to load the non core methods, Simple.pm uses
-IO::File to supply anonymous temp files for file uploads and Data::Dumper
-for cloning objects and dumping data.  These modules are all part of the
-standard Perl distribution.
+CGI::Simple is strict and warnings compliant.
 
 There are 4 modules in this distribution:
 
@@ -3583,14 +3536,6 @@ The following CGI.pm pragmas are not available:
     -nosticky
     -no_xhtml
     -private_tempfiles
-
--compile has been removed as it is not available using SelfLoader. If you
-wish to compile all of CGI::Simple comment out the line:
-
-    use SelfLoader
-
-and remove the __DATA__ token. Tempfiles are now private by default and the
-other pragmas are HTML related.
 
 =head2 Filehandles
 
