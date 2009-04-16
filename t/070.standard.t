@@ -806,12 +806,13 @@ is( $sv, undef, 'cookie(\'invalid\'), 1' );
 is( join( '', @av ), '', 'cookie(\'invalid\'), 2' );
 
 my @vals = (
-  -name    => 'Password',
-  -value   => [ 'superuser', 'god', 'open sesame', 'mydog woofie' ],
-  -expires => 'Mon, 11-Nov-2018 11:00:00 GMT',
-  -domain  => '.nowhere.com',
-  -path    => '/cgi-bin/database',
-  -secure  => 1
+  -name     => 'Password',
+  -value    => [ 'superuser', 'god', 'open sesame', 'mydog woofie' ],
+  -expires  => 'Mon, 11-Nov-2018 11:00:00 GMT',
+  -domain   => '.nowhere.com',
+  -path     => '/cgi-bin/database',
+  -secure   => 1,
+  -httponly => 1
 );
 
 # cookie() - scalar and array context, full argument set, correct order
@@ -820,27 +821,27 @@ $sv = cookie( @vals );
 @av = cookie( @vals );
 is(
   $sv,
-  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure',
+  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure; HttpOnly',
   'cookie(\@vals) correct order, 1'
 );
 is(
   join( '', @av ),
-  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure',
+  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure; HttpOnly',
   'cookie(\@vals) correct order, 2'
 );
 
 # cookie() - scalar and array context, full argument set, incorrect order
 
-$sv = cookie( @vals[ 0, 1, 10, 11, 8, 9, 2, 3, 4, 5, 6, 7 ] );
-@av = cookie( @vals[ 0, 1, 10, 11, 8, 9, 2, 3, 4, 5, 6, 7 ] );
+$sv = cookie( @vals[ 0, 1, 10, 11, 12, 13, 8, 9, 2, 3, 4, 5, 6, 7 ] );
+@av = cookie( @vals[ 0, 1, 10, 11, 12, 13, 8, 9, 2, 3, 4, 5, 6, 7 ] );
 is(
   $sv,
-  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure',
+  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure; HttpOnly',
   'cookie(\@vals) incorrect order, 1'
 );
 is(
   join( '', @av ),
-  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure',
+  'Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure; HttpOnly',
   'cookie(\@vals) incorrect order, 2'
 );
 my $cookie = $sv;    # save a cookie for header testing
@@ -905,7 +906,7 @@ my $header = <<'HEADER';
 HTTP/1.0 402 Payment required
 Server: Apache - accept no substitutes
 Status: 402 Payment required
-Set-Cookie: Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure
+Set-Cookie: Password=superuser&god&open%20sesame&mydog%20woofie; domain=.nowhere.com; path=/cgi-bin/database; expires=Mon, 11-Nov-2018 11:00:00 GMT; secure; HttpOnly
 Expires: Mon, 11-Nov-2018 11:00:00 GMT
 Date: Tue, 11-Nov-2018 11:00:00 GMT
 Content-Disposition: attachment; filename="foo.gif"

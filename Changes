@@ -158,3 +158,8 @@ Revision history for Perl extension CGI::Simple.
 1.108   2009-03-13
       - Remove bogus references to Selfloader in documenation. No
         functional changes.
+
+1.109   2009-04-16
+      - Added support for HttpOnly to CGI::Simple::Cookie. Thanks to
+        Scott Thomson for the patch.
+

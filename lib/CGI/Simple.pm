@@ -493,7 +493,7 @@ sub _parse_multipart {
           '400 No boundary supplied for multipart/form-data' );
         return 0;
       }
-      $boundary = $self->_massage_boundary($boundary);
+      $boundary = $self->_massage_boundary( $boundary );
     }
 
     BOUNDARY:
@@ -906,12 +906,13 @@ sub cookie {
   my ( $self, @params ) = @_;
   require CGI::Simple::Cookie;
   require CGI::Simple::Util;
-  my ( $name, $value, $path, $domain, $secure, $expires )
+  my ( $name, $value, $path, $domain, $secure, $expires, $httponly )
    = CGI::Simple::Util::rearrange(
     [
       'NAME', [ 'VALUE', 'VALUES' ],
       'PATH',   'DOMAIN',
-      'SECURE', 'EXPIRES'
+      'SECURE', 'EXPIRES',
+      'HTTPONLY'
     ],
     @params
    );
@@ -935,12 +936,13 @@ sub cookie {
   # If we get here, we're creating a new cookie
   return undef unless $name;    # this is an error
   @params = ();
-  push @params, '-name'    => $name;
-  push @params, '-value'   => $value;
-  push @params, '-domain'  => $domain if $domain;
-  push @params, '-path'    => $path if $path;
-  push @params, '-expires' => $expires if $expires;
-  push @params, '-secure'  => $secure if $secure;
+  push @params, '-name'     => $name;
+  push @params, '-value'    => $value;
+  push @params, '-domain'   => $domain if $domain;
+  push @params, '-path'     => $path if $path;
+  push @params, '-expires'  => $expires if $expires;
+  push @params, '-secure'   => $secure if $secure;
+  push @params, '-httponly' => $httponly if $httponly;
   return CGI::Simple::Cookie->new( @params );
 }
 

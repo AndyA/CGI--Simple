@@ -2,7 +2,7 @@
 # The only modification is to change CGI::Cookie to CGI::Simple::Cookie
 # whenever it appears
 
-use Test::More tests => 86;
+use Test::More tests => 93;
 use strict;
 use CGI::Simple::Util qw(escape unescape);
 use POSIX qw(strftime);
@@ -152,12 +152,13 @@ my @test_cookie = (
 
   # Try new with full information provided
   my $c = CGI::Simple::Cookie->new(
-    -name    => 'foo',
-    -value   => 'bar',
-    -expires => '+3M',
-    -domain  => '.capricorn.com',
-    -path    => '/cgi-bin/database',
-    -secure  => 1
+    -name     => 'foo',
+    -value    => 'bar',
+    -expires  => '+3M',
+    -domain   => '.capricorn.com',
+    -path     => '/cgi-bin/database',
+    -secure   => 1,
+    -httponly => 1
   );
   is( ref( $c ), 'CGI::Simple::Cookie',
     'new returns objects of correct type' );
@@ -170,7 +171,8 @@ my @test_cookie = (
   );
   is( $c->domain, '.capricorn.com',    'domain is correct' );
   is( $c->path,   '/cgi-bin/database', 'path is correct' );
-  ok( $c->secure, 'secure attribute is set' );
+  ok( $c->secure,   'secure attribute is set' );
+  ok( $c->httponly, 'httponly attribute is set' );
 
 # now try it with the only two manditory values (should also set the default path)
   $c = CGI::Simple::Cookie->new(
@@ -184,7 +186,8 @@ my @test_cookie = (
   ok( !defined $c->expires, 'expires is not set' );
   ok( !defined $c->domain,  'domain attributeis not set' );
   is( $c->path, '/', 'path atribute is set to default' );
-  ok( !defined $c->secure, 'secure attribute is set' );
+  ok( !defined $c->secure,   'secure attribute is not set' );
+  ok( !defined $c->httponly, 'httponly attribute is not set' );
 
   # I'm really not happy about the restults of this section.  You pass
   # the new method invalid arguments and it just merilly creates a
@@ -211,12 +214,13 @@ my @test_cookie = (
 
 {
   my $c = CGI::Simple::Cookie->new(
-    -name    => 'Jam',
-    -value   => 'Hamster',
-    -expires => '+3M',
-    -domain  => '.pie-shop.com',
-    -path    => '/',
-    -secure  => 1
+    -name     => 'Jam',
+    -value    => 'Hamster',
+    -expires  => '+3M',
+    -domain   => '.pie-shop.com',
+    -path     => '/',
+    -secure   => 1,
+    -httponly => 1
   );
 
   my $name = $c->name;
@@ -239,6 +243,9 @@ my @test_cookie = (
 
   like( $c->as_string, '/secure/',
     "Stringified cookie contains secure" );
+
+  like( $c->as_string, '/HttpOnly/',
+    "Stringified cookie contains HttpOnly" );
 
   $c = CGI::Simple::Cookie->new(
     -name  => 'Hamster-Jam',
@@ -263,6 +270,9 @@ my @test_cookie = (
 
   ok( $c->as_string !~ /secure/,
     "Stringified cookie does not contain secure" );
+
+  ok( $c->as_string !~ /HttpOnly/,
+    "Stringified cookie does not contain HttpOnly" );
 }
 
 #-----------------------------------------------------------------------------
@@ -271,23 +281,25 @@ my @test_cookie = (
 
 {
   my $c1 = CGI::Simple::Cookie->new(
-    -name    => 'Jam',
-    -value   => 'Hamster',
-    -expires => '+3M',
-    -domain  => '.pie-shop.com',
-    -path    => '/',
-    -secure  => 1
+    -name     => 'Jam',
+    -value    => 'Hamster',
+    -expires  => '+3M',
+    -domain   => '.pie-shop.com',
+    -path     => '/',
+    -secure   => 1,
+    -httponly => 1
   );
 
   # have to use $c1->expires because the time will occasionally be
   # different between the two creates causing spurious failures.
   my $c2 = CGI::Simple::Cookie->new(
-    -name    => 'Jam',
-    -value   => 'Hamster',
-    -expires => $c1->expires,
-    -domain  => '.pie-shop.com',
-    -path    => '/',
-    -secure  => 1
+    -name     => 'Jam',
+    -value    => 'Hamster',
+    -expires  => $c1->expires,
+    -domain   => '.pie-shop.com',
+    -path     => '/',
+    -secure   => 1,
+    -httponly => 1
   );
 
   # This looks titally whacked, but it does the -1, 0, 1 comparison
@@ -323,12 +335,13 @@ my @test_cookie = (
 
 {
   my $c = CGI::Simple::Cookie->new(
-    -name    => 'Jam',
-    -value   => 'Hamster',
-    -expires => '+3M',
-    -domain  => '.pie-shop.com',
-    -path    => '/',
-    -secure  => 1
+    -name     => 'Jam',
+    -value    => 'Hamster',
+    -expires  => '+3M',
+    -domain   => '.pie-shop.com',
+    -path     => '/',
+    -secure   => 1,
+    -httponly => 1
   );
 
   is( $c->name,            'Jam',   'name is correct' );
@@ -372,4 +385,8 @@ my @test_cookie = (
   ok( $c->secure,       'secure attribute is set' );
   ok( !$c->secure( 0 ), 'secure attribute is cleared' );
   ok( !$c->secure,      'secure attribute is cleared' );
+
+  ok( $c->httponly,       'httponly attribute is set' );
+  ok( !$c->httponly( 0 ), 'httponly attribute is cleared' );
+  ok( !$c->httponly,      'httponly attribute is cleared' );
 }

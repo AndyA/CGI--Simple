@@ -72,24 +72,27 @@ sub raw_fetch {
 sub new {
   my ( $class, @params ) = @_;
   $class = ref( $class ) || $class;
-  my ( $name, $value, $path, $domain, $secure, $expires ) = rearrange(
+  my ( $name, $value, $path, $domain, $secure, $expires, $httponly )
+   = rearrange(
     [
       'NAME', [ 'VALUE', 'VALUES' ],
       'PATH',   'DOMAIN',
-      'SECURE', 'EXPIRES'
+      'SECURE', 'EXPIRES',
+      'HTTPONLY'
     ],
     @params
-  );
+   );
   return undef unless defined $name and defined $value;
   my $self = {};
   bless $self, $class;
   $self->name( $name );
   $self->value( $value );
   $path ||= "/";
-  $self->path( $path )       if defined $path;
-  $self->domain( $domain )   if defined $domain;
-  $self->secure( $secure )   if defined $secure;
-  $self->expires( $expires ) if defined $expires;
+  $self->path( $path )         if defined $path;
+  $self->domain( $domain )     if defined $domain;
+  $self->secure( $secure )     if defined $secure;
+  $self->expires( $expires )   if defined $expires;
+  $self->httponly( $httponly ) if defined $httponly;
   return $self;
 }
 
@@ -103,6 +106,7 @@ sub as_string {
   push @cookie, "path=" . $self->path       if $self->path;
   push @cookie, "expires=" . $self->expires if $self->expires;
   push @cookie, "secure"                    if $self->secure;
+  push @cookie, "HttpOnly"                  if $self->httponly;
   return join "; ", @cookie;
 }
 
@@ -153,6 +157,12 @@ sub path {
   my ( $self, $path ) = @_;
   $self->{'path'} = $path if defined $path;
   return $self->{'path'};
+}
+
+sub httponly {
+  my ( $self, $httponly ) = @_;
+  $self->{'httponly'} = $httponly if defined $httponly;
+  return $self->{'httponly'};
 }
 
 1;
@@ -243,6 +253,16 @@ that all scripts at your site will receive the cookie.
 If the "secure" attribute is set, the cookie will only be sent to your
 script if the CGI request is occurring on a secure channel, such as SSL.
 
+=item B<4. HttpOnly flag>
+
+If the "httponly" attribute is set, the cookie will only be accessible
+through HTTP Requests. This cookie will be inaccessible via JavaScript
+(to prevent XSS attacks).
+
+See this URL for more information including supported browsers:
+
+L<http://www.owasp.org/index.php/HTTPOnly>
+
 =back
 
 =head2 Creating New Cookies
@@ -276,6 +296,9 @@ pages at your site.
 
 B<-secure> if set to a true value instructs the browser to return the
 cookie only when a cryptographic protocol is in use.
+
+B<-httponly> if set to a true value, the cookie will not be accessible
+via JavaScript.
 
 =head2 Sending the Cookie to the Browser
 
@@ -378,6 +401,14 @@ Get or set the cookie's path.
 =item B<expires()>
 
 Get or set the cookie's expiration time.
+
+=item B<secure()>
+
+Get or set the cookie's secure flag.
+
+=item B<httponly()>
+
+Get or set the cookie's HttpOnly flag.
 
 =back
 
