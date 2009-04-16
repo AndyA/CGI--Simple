@@ -171,7 +171,7 @@ __END__
 
 =head1 NAME
 
-CGI::Simple::Cookie - Interface to Netscape Cookies
+CGI::Simple::Cookie - Interface to browse cookies
 
 =head1 SYNOPSIS
 
@@ -195,11 +195,11 @@ CGI::Simple::Cookie - Interface to Netscape Cookies
 
 =head1 DESCRIPTION
 
-CGI::Simple::Cookie is an interface to Netscape (HTTP/1.1) cookies, an
-innovation that allows Web servers to store persistent information on
-the browser's side of the connection.  Although CGI::Simple::Cookie is
-intended to be used in conjunction with CGI::Simple.pm (and is in fact
-used by it internally), you can use this module independently.
+CGI::Simple::Cookie is an interface to HTTP/1.1 cookies, a mechanism
+that allows Web servers to store persistent information on the browser's
+side of the connection. Although CGI::Simple::Cookie is intended to be
+used in conjunction with CGI::Simple.pm (and is in fact used by it
+internally), you can use this module independently.
 
 For full information on cookies see:
 
@@ -230,8 +230,8 @@ the user quits the browser.
 This is a partial or complete domain name for which the cookie is
 valid.  The browser will return the cookie to any host that matches
 the partial domain name.  For example, if you specify a domain name
-of ".capricorn.com", then Netscape will return the cookie to
-Web servers running on any of the machines "www.capricorn.com",
+of ".capricorn.com", then the browser will return the cookie to
+web servers running on any of the machines "www.capricorn.com",
 "ftp.capricorn.com", "feckless.capricorn.com", etc.  Domain names
 must contain at least two periods to prevent attempts to match
 on top level domains like ".edu".  If no domain is specified, then
