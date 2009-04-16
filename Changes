@@ -163,3 +163,7 @@ Revision history for Perl extension CGI::Simple.
       - Added support for HttpOnly to CGI::Simple::Cookie. Thanks to
         Scott Thomson for the patch.
 
+1.110   2009-04-16
+      - Added missing test to manifest / distro.
+      - Added a test to ensure the manifest is consistent.
+
