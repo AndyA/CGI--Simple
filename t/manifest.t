@@ -3,10 +3,14 @@
 use strict;
 use warnings;
 
-use ExtUtils::Manifest qw( fullcheck );
-use Test::More tests => 2;
+use Test::More;
 
-my ( $missing, $extra ) = fullcheck;
+eval { require ExtUtils::Manifest };
+plan skip_all => 'No ExtUtils::Manifest' if $@;
+plan skip_all => 'No MANIFEST.SKIP' unless -f 'MANIFEST.SKIP';
+plan tests => 2;
+
+my ( $missing, $extra ) = ExtUtils::Manifest::fullcheck();
 
 is_deeply $missing, [], 'missing files';
 is_deeply $extra,   [], 'extra files';
