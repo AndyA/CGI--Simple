@@ -27,3 +27,5 @@
 \.swp$
 ^\.prove$
 ^CGI-Simple-
+^reference
+^Session\.vim$
