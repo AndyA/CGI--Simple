@@ -159,8 +159,8 @@ BEGIN {
   if ( "\t" ne "\011" ) {
     eval { require CGI::Simple::Util };
     if ( $@ ) {
-      croak
-       "Your server is using not using ASCII, you must install CGI::Simple::Util, error: $@";
+      croak "Your server is using not using ASCII, ",
+       "you must install CGI::Simple::Util, error: $@";
     }
 
     # hack the symbol table and replace simple encode/decode subs
@@ -174,20 +174,23 @@ BEGIN {
 ################ The Guts ################
 
 sub new {
-  my ( $class, $init ) = @_;
+  my ( $class, @init ) = @_;
   $class = ref( $class ) || $class;
   my $self = {};
   bless $self, $class;
+  if ( 'CODE' eq ref $init[0] ) {
+    $self->upload_hook( @init );
+  }
   if ( $self->_mod_perl ) {
-    if ( $init ) {
-      $self->{'.mod_perl_request'} = $init;
-      undef $init;    # otherwise _initialize takes the wrong path
+    if ( $init[0] ) {
+      $self->{'.mod_perl_request'} = $init[0];
+      @init = ();    # otherwise _initialize takes the wrong path
     }
     $self->_initialize_mod_perl();
   }
   $self->_initialize_globals;
   $self->_store_globals;
-  $self->_initialize( $init );
+  $self->_initialize( @init );
   return $self;
 }
 
@@ -561,16 +564,17 @@ sub _save_tmpfile {
      unless $fh;
   }
 
-# read in data until closing boundary found. buffer to catch split boundary
-# we do this regardless of whether we save the file or not to read the file
-# data from STDIN. if either uploads are disabled or no file has been sent
-# $fh will be undef so only do file stuff if $fh is true using $fh && syntax
+  # read in data until closing boundary found. buffer to catch split
+  # boundary we do this regardless of whether we save the file or not
+  # to read the file data from STDIN. if either uploads are disabled
+  # or no file has been sent $fh will be undef so only do file stuff
+  # if $fh is true using $fh && syntax
+
   $fh && binmode $fh;
   while ( $got_data < $length ) {
 
     my $buffer = $data;
     last unless _internal_read( $self, $data );
-
     # fixed hanging bug if browser terminates upload part way through
     # thanks to Brandon Black
     unless ( $data ) {
@@ -581,6 +585,7 @@ sub _save_tmpfile {
     }
 
     $got_data += length $data;
+
     if ( "$buffer$data" =~ m/$boundary/ ) {
       $data = $buffer . $data;
       last;
@@ -589,11 +594,20 @@ sub _save_tmpfile {
     # we do not have partial boundary so print to file if valid $fh
     $fh && print $fh $buffer;
     $file_size += length $buffer;
+    $self->_call_upload_hook( $filename, $buffer, $file_size );
   }
   $data =~ s/^(.*?)$CRLF(?=$boundary)//s;
   $fh && print $fh $1;    # print remainder of file if valid $fh
   $file_size += length $1;
+  $self->_call_upload_hook( $filename, $1, $file_size );
   return $got_data, $data, $fh, $file_size;
+}
+
+sub _call_upload_hook {
+  my ( $self, $filename, $data, $totalbytes ) = @_;
+  if ( my $hook = $self->{'.upload_hook'} ) {
+    $hook->( $filename, $data, $totalbytes, $self->{'.upload_data'} );
+  }
 }
 
 # Define the CRLF sequence.  You can't use a simple "\r\n" because of system
@@ -675,6 +689,12 @@ sub keywords {
   my @result
    = defined( $self->{'keywords'} ) ? @{ $self->{'keywords'} } : ();
   return @result;
+}
+
+sub upload_hook {
+  my ( $self, $hook, $data ) = @_;
+  $self->{'.upload_hook'} = $hook;
+  $self->{'.upload_data'} = $data;
 }
 
 sub Vars {
@@ -2081,6 +2101,19 @@ information from B<uploadInfo> which will return the file size in bytes.
 The size attribute is optional as this is the default value returned.
 
 Note: The old CGI.pm B<uploadInfo()> method has been deleted.
+
+=head2 upload_hook() Setup an upload progress callback
+
+You can set up a callback that will be called when a file upload is
+being read during the form processing.
+
+  $q->upload_hook(sub {
+    my ( $filename, $buffer, $bytes_read, $userdata ) = @_;
+    # do something
+  }, $userdata);
+
+The optional $userdata field lets you pass user defined data to your
+hook callback.
 
 =head2 $POST_MAX and $DISABLE_UPLOADS
 
