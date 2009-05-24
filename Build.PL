@@ -1,7 +1,11 @@
 use strict;
 use Module::Build;
 
-my $builder = Module::Build->new(
+use lib 'inc';
+
+use MyBuilder;
+
+my $builder = MyBuilder->new(
   module_name       => 'CGI::Simple',
   sign              => 1,
   license           => 'perl',

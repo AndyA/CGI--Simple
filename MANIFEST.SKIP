@@ -1,6 +1,7 @@
 \.tmproj$
 \.tar\.gz$
 \B\.svn\b
+\B\.git\b
 ^\.cvsignore
 
 # Makemaker generated files and dirs.
@@ -25,3 +26,4 @@
 ^TODO$
 \.swp$
 ^\.prove$
+^CGI-Simple-

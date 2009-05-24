@@ -1,5 +1,6 @@
 Build.PL
 Changes
+inc/MyBuilder.pm
 lib/CGI/Simple.pm
 lib/CGI/Simple/Cookie.pm
 lib/CGI/Simple/Standard.pm
