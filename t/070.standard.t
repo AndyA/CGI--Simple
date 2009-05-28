@@ -1,4 +1,4 @@
-use Test::More tests => 301;
+use Test::More tests => 288;
 use Carp;
 use strict;
 use vars qw(%field %in);
@@ -246,45 +246,6 @@ is( join( '', @av ), 678, 'new() query string constructor, 4' );
 open FH, ">>$tmpfile", or carp "Can't append $tmpfile $!\n";
 save_parameters( \*FH );
 close FH;
-
-# new() file constructor
-
-open FH, $tmpfile, or carp "Can't open temp file\n";
-is(
-  join( '', <FH> ),
-  "foo=1\nbar=2\nbar=3\nbar=4\n=\nfoo=5\nbar=6\nbar=7\nbar=8\n=\n",
-  'new() file constructor, 1'
-);
-close FH;
-open FH, $tmpfile, or carp "Can't open temp file\n";
-restore_parameters( \*FH );
-close FH;
-@av = param();
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 2' );
-is( param( 'foo' ), 1, 'new() file constructor, 3' );
-is( param( 'bar' ), 2, 'new() file constructor, 4' );
-@av = param( 'bar' );
-is( join( '', @av ), 234, 'new() file constructor, 5' );
-
-# call new twice to read two sections of file
-open FH, $tmpfile, or carp "Can't open temp file\n";
-restore_parameters( \*FH );
-@av = param();
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 6' );
-is( param( 'foo' ), 1, 'new() file constructor, 7' );
-is( param( 'bar' ), 2, 'new() file constructor, 8' );
-@av = param( 'bar' );
-is( join( '', @av ), 234, 'new() file constructor, 9' );
-
-# call new again
-restore_parameters( \*FH );
-close FH;
-@av = param();
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 10' );
-is( param( 'foo' ), 5, 'new() file constructor, 11' );
-is( param( 'bar' ), 6, 'new() file constructor, 12' );
-@av = param( 'bar' );
-is( join( '', @av ), 678, 'new() file constructor, 13' );
 
 # new() \@ARGV constructor
 

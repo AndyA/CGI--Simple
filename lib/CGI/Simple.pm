@@ -282,7 +282,7 @@ sub _initialize {
   # chromatic's blessed GLOB patch
   # elsif ( (ref $init) =~ m/GLOB/i ) { # initialize from a file
   elsif ( UNIVERSAL::isa( $init, 'GLOB' ) ) {   # initialize from a file
-    $self->_init_from_file( $init );
+    $self->_read_parse($init);
   }
   elsif ( ( ref $init ) eq 'CGI::Simple' ) {
 
@@ -304,20 +304,22 @@ sub _initialize {
   }
 }
 
-sub _internal_read($\$;$) {
-  my ( $self, $buffer, $len ) = @_;
+sub _internal_read($*\$;$) {
+  my ( $self, $glob, $buffer, $len ) = @_;
   $len = 4096 if !defined $len;
   if ( $self->{'.mod_perl'} ) {
     my $r = $self->_mod_perl_request();
     $r->read( $$buffer, $len );
   }
   else {
-    read( STDIN, $$buffer, $len );
+    read( $glob, $$buffer, $len );
   }
 }
 
 sub _read_parse {
   my $self   = shift;
+  my $handle = shift || \*STDIN;
+
   my $data   = '';
   my $type   = $ENV{'CONTENT_TYPE'} || 'No CONTENT_TYPE received';
   my $length = $ENV{'CONTENT_LENGTH'} || 0;
@@ -333,7 +335,7 @@ sub _read_parse {
 
     # silently discard data ??? better to just close the socket ???
     while ( $length > 0 ) {
-      last unless _internal_read( $self, my $buffer );
+      last unless _internal_read( $self, $handle, my $buffer );
       $length -= length( $buffer );
     }
 
@@ -341,7 +343,7 @@ sub _read_parse {
   }
 
   if ( $length and $type =~ m|^multipart/form-data|i ) {
-    my $got_length = $self->_parse_multipart;
+    my $got_length = $self->_parse_multipart($handle);
     if ( $length != $got_length ) {
       $self->cgi_error(
         "500 Bad read on multipart/form-data! wanted $length, got $got_length"
@@ -356,9 +358,9 @@ sub _read_parse {
       # we may not get all the data we want with a single read on large
       # POSTs as it may not be here yet! Credit Jason Luther for patch
       # CGI.pm < 2.99 suffers from same bug
-      _internal_read( $self, $data, $length );
+      _internal_read( $self, $handle, $data, $length );
       while ( length( $data ) < $length ) {
-        last unless _internal_read( $self, my $buffer );
+        last unless _internal_read( $self, $handle, my $buffer );
         $data .= $buffer;
       }
 
@@ -467,6 +469,7 @@ sub _massage_boundary {
 
 sub _parse_multipart {
   my $self = shift;
+  my $handle = shift or die "NEED A HANDLE!?";
 
   my ( $boundary )
    = $ENV{'CONTENT_TYPE'} =~ /boundary=\"?([^\";,]+)\"?/;
@@ -481,7 +484,7 @@ sub _parse_multipart {
   READ:
 
   while ( $got_data < $length ) {
-    last READ unless _internal_read( $self, my $buffer );
+    last READ unless _internal_read( $self, $handle, my $buffer );
     $data .= $buffer;
     $got_data += length $buffer;
 
@@ -518,8 +521,8 @@ sub _parse_multipart {
         my ( $mime ) = $unfold =~ m/Content-Type:\s+([-\w\/]+)/io;
         $data =~ s/^\Q$header\E//;
         ( $got_data, $data, my $fh, my $size )
-         = $self->_save_tmpfile( $boundary, $filename, $got_data,
-          $data );
+         = $self->_save_tmpfile( $handle, $boundary, $filename, $got_data,
+          $data);
         $self->_add_param( $param, $filename );
         $self->{'.upload_fields'}->{$param} = $filename;
         $self->{'.filehandles'}->{$filename} = $fh if $fh;
@@ -548,7 +551,7 @@ sub _parse_multipart {
 }
 
 sub _save_tmpfile {
-  my ( $self, $boundary, $filename, $got_data, $data ) = @_;
+  my ( $self, $handle, $boundary, $filename, $got_data, $data ) = @_;
   my $fh;
   my $CRLF      = $self->crlf;
   my $length    = $ENV{'CONTENT_LENGTH'} || 0;
@@ -574,7 +577,7 @@ sub _save_tmpfile {
   while ( $got_data < $length ) {
 
     my $buffer = $data;
-    last unless _internal_read( $self, $data );
+    last unless _internal_read( $self, \*STDIN, $data );
     # fixed hanging bug if browser terminates upload part way through
     # thanks to Brandon Black
     unless ( $data ) {
@@ -863,6 +866,8 @@ sub parse_query_string {
 ################   Save and Restore params from file    ###############
 
 sub _init_from_file {
+    use Carp qw(confess);
+    confess "INIT_FROM_FILE called, stupid fucker!";
   my ( $self, $fh ) = @_;
   local $/ = "\n";
   while ( my $pair = <$fh> ) {
@@ -1432,7 +1437,7 @@ sub url {
     $url .= $script_name;
   }
   elsif ( $relative ) {
-    ( $url ) = $script_name =~ m!([^/]+)$!;
+    ( $url ) = $script_name =~ m#([^/]+)$#;
   }
   elsif ( $absolute ) {
     $url = $script_name;

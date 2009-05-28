@@ -1,4 +1,4 @@
-use Test::More tests => 332;
+use Test::More tests => 318;
 use Carp;
 use strict;
 use vars qw(%field %in);
@@ -223,52 +223,6 @@ is( join( '', @av ), 678, 'new() query string constructor, 4' );
 open FH, ">>$tmpfile", or carp "Can't append $tmpfile $!\n";
 $q->save_parameters( \*FH );
 close FH;
-
-# new() file constructor
-open FH, $tmpfile, or carp "Can't open temp file\n";
-is(
-  join( '', <FH> ),
-  "foo=1\nbar=2\nbar=3\nbar=4\n=\nfoo=5\nbar=6\nbar=7\nbar=8\n=\n",
-  'new() file constructor, 1'
-);
-close FH;
-open FH, $tmpfile, or carp "Can't open temp file\n";
-$q = new CGI::Simple( \*FH );
-close FH;
-@av = $q->param;
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 2' );
-is( $q->param( 'foo' ), 1, 'new() file constructor, 3' );
-is( $q->param( 'bar' ), 2, 'new() file constructor, 4' );
-@av = $q->param( 'bar' );
-is( join( '', @av ), 234, 'new() file constructor, 5' );
-
-# call new twice to read two sections of file
-open FH, $tmpfile, or carp "Can't open temp file\n";
-$q  = new CGI::Simple( \*FH );
-@av = $q->param;
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 6' );
-is( $q->param( 'foo' ), 1, 'new() file constructor, 7' );
-is( $q->param( 'bar' ), 2, 'new() file constructor, 8' );
-@av = $q->param( 'bar' );
-is( join( '', @av ), 234, 'new() file constructor, 9' );
-
-# call new again
-$q = new CGI::Simple( \*FH );
-close FH;
-@av = $q->param;
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 10' );
-is( $q->param( 'foo' ), 5, 'new() file constructor, 11' );
-is( $q->param( 'bar' ), 6, 'new() file constructor, 12' );
-@av = $q->param( 'bar' );
-is( join( '', @av ), 678, 'new() file constructor, 13' );
-
-# call new with a blessed glob  ( test chromatic's patch with chromatic's test!)
-open FH, $tmpfile, or carp "Can't open temp file\n";
-my $fh = bless \*FH, 'Some::Class';
-$q = new CGI::Simple( $fh );
-close FH;
-@av = $q->param;
-is( join( ' ', @av ), 'foo bar', 'new() file constructor, 14' );
 
 # new() CGI::Simple object constructor
 

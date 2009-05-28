@@ -13,6 +13,7 @@ t/000.load.t
 t/020.cookie.t
 t/030.function.t
 t/040.request.t
+t/041.multipart.t
 t/050.simple.t
 t/060.slow_post.t
 t/070.standard.t
