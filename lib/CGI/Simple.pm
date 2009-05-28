@@ -282,7 +282,7 @@ sub _initialize {
   # chromatic's blessed GLOB patch
   # elsif ( (ref $init) =~ m/GLOB/i ) { # initialize from a file
   elsif ( UNIVERSAL::isa( $init, 'GLOB' ) ) {   # initialize from a file
-    $self->_read_parse($init);
+    $self->_read_parse( $init );
   }
   elsif ( ( ref $init ) eq 'CGI::Simple' ) {
 
@@ -317,7 +317,7 @@ sub _internal_read($*\$;$) {
 }
 
 sub _read_parse {
-  my $self   = shift;
+  my $self = shift;
   my $handle = shift || \*STDIN;
 
   my $data   = '';
@@ -343,7 +343,7 @@ sub _read_parse {
   }
 
   if ( $length and $type =~ m|^multipart/form-data|i ) {
-    my $got_length = $self->_parse_multipart($handle);
+    my $got_length = $self->_parse_multipart( $handle );
     if ( $length != $got_length ) {
       $self->cgi_error(
         "500 Bad read on multipart/form-data! wanted $length, got $got_length"
@@ -521,8 +521,8 @@ sub _parse_multipart {
         my ( $mime ) = $unfold =~ m/Content-Type:\s+([-\w\/]+)/io;
         $data =~ s/^\Q$header\E//;
         ( $got_data, $data, my $fh, my $size )
-         = $self->_save_tmpfile( $handle, $boundary, $filename, $got_data,
-          $data);
+         = $self->_save_tmpfile( $handle, $boundary, $filename,
+          $got_data, $data );
         $self->_add_param( $param, $filename );
         $self->{'.upload_fields'}->{$param} = $filename;
         $self->{'.filehandles'}->{$filename} = $fh if $fh;
@@ -866,8 +866,8 @@ sub parse_query_string {
 ################   Save and Restore params from file    ###############
 
 sub _init_from_file {
-    use Carp qw(confess);
-    confess "INIT_FROM_FILE called, stupid fucker!";
+  use Carp qw(confess);
+  confess "INIT_FROM_FILE called, stupid fucker!";
   my ( $self, $fh ) = @_;
   local $/ = "\n";
   while ( my $pair = <$fh> ) {

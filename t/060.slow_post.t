@@ -33,7 +33,6 @@ SKIP: {
   $q  = new CGI::Simple;
   $sv = $q->param( 'SLOW' );
 
-## Please see file perltidy.ERR
-  is( length $sv, 10_000,      'length ok' );
-  is( $sv,        'X' x10_000, 'value ok' );
+  is( length $sv, 10_000,       'length ok' );
+  is( $sv,        'X' x 10_000, 'value ok' );
 }
