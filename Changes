@@ -168,3 +168,7 @@ Revision history for Perl extension CGI::Simple.
       - Added a test to ensure the manifest is consistent.
       - Migrated to git.
 
+1.111   2009-05-28
+      - Implemented Michael Nachbaur fixes for multipart form data
+        handling.
+
