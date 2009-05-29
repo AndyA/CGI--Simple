@@ -2,9 +2,8 @@
 \.tar\.gz$
 \B\.svn\b
 \B\.git\b
+\B\.gitignore\b
 ^\.cvsignore
-
-# Makemaker generated files and dirs.
 ^MANIFEST\.
 ^Makefile$
 ^Build$
@@ -14,8 +13,6 @@
 ^blib/
 ^pm_to_blib$
 ^_build/
-
-# Temp, old and emacs backup files.
 ~$
 ^\.DS_Store
 \.(old|tmp|bak)$
@@ -26,6 +23,10 @@
 ^TODO$
 \.swp$
 ^\.prove$
+^Session\.vim$
+CGI-Simple-*
+
+# Makemaker generated files and dirs.
+# Temp, old and emacs backup files.
 ^CGI-Simple-
 ^reference
-^Session\.vim$

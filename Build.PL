@@ -1,8 +1,8 @@
 use strict;
-use Module::Build;
+use warnings;
 
 use lib 'inc';
-
+use Module::Build;
 use MyBuilder;
 
 my $builder = MyBuilder->new(
