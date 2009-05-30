@@ -11,7 +11,7 @@ my $builder = MyBuilder->new(
   license           => 'perl',
   dist_author       => 'Andy Armstrong <andy@hexten.net>',
   dist_version_from => 'lib/CGI/Simple.pm',
-  requires          => { 'Test::More' => 0, },
+  requires          => { 'Test::More' => 0, 'IO::Scalar' => 0 },
   add_to_cleanup    => ['CGI-Simple-*'],
 );
 
