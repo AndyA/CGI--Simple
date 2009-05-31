@@ -172,3 +172,5 @@ Revision history for Perl extension CGI::Simple.
       - Implemented Michael Nachbaur fixes for multipart form data
         handling.
 
+1.112   2009-05-31
+      - (thanks bingos) added missing IO::Scalar dependency.

@@ -9,9 +9,12 @@ WriteMakefile(
   VERSION_FROM  => 'lib/CGI/Simple.pm',
   ABSTRACT_FROM => 'lib/CGI/Simple.pm',
   PL_FILES      => {},
-  PREREQ_PM     => { 'Test::More' => 0, 'IO::Scalar' => 0 },
-  dist          => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-  clean => { FILES => 'CGI-Simple-*' },
+  PREREQ_PM     => {
+    'Test::More' => 0,
+    'IO::Scalar' => 0
+  },
+  dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+  clean => { FILES    => 'CGI-Simple-*' },
 );
 
 sub license {
