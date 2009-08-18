@@ -406,7 +406,7 @@ CGI.pm by Lincoln Stein.
 
 =head1 SEE ALSO
 
-L<CGI::Simple which is the back end for this module>,
+L<CGI::Simple> which is the back end for this module,
 B<CGI.pm by Lincoln Stein>
 
 =cut
