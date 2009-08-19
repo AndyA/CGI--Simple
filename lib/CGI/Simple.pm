@@ -683,12 +683,18 @@ sub keywords {
 sub Vars {
   my $self = shift;
   $self->{'.sep'} = shift || $self->{'.sep'} || "\0";
-  my ( %hash, %tied );
+  my %hash;
   for my $param ( $self->param ) {
     $hash{$param} = join $self->{'.sep'}, $self->param( $param );
   }
-  tie %tied, "CGI::Simple", $self;
-  return wantarray ? %hash : \%tied;
+  if (wantarray) {
+      return %hash;
+  }
+  else {
+    my %tied;
+    tie %tied, "CGI::Simple", $self;
+    return \%tied;
+  }
 }
 
 sub TIEHASH { $_[1] ? $_[1] : new $_[0] }
