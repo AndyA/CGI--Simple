@@ -1012,7 +1012,7 @@ sub header {
 
     # Don't use \s because of perl bug 21951
     next
-     unless my ( $header, $value ) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/;
+     unless my ( $header, $value ) = /([^ \r\n\t=]+)=\"?(.+?)\"?$/s;
     ( $_ = $header )
      =~ s/^(\w)(.*)/"\u$1\L$2" . ': '.$self->unescapeHTML($value)/e;
   }
