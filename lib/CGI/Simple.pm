@@ -992,6 +992,17 @@ sub header {
     ],
     @params
    );
+
+    # CR escaping for values, per RFC 822
+    for my $header ($type,$status,$cookie,$target,$expires,$nph,$charset,$attachment,$p3p,@other) {
+        if (defined $header) {
+            $header =~ s/
+                (?<=\n)    # For any character proceeded by a newline
+                (?=\S)     # ... that is not whitespace
+            / /xg;         # ... inject a leading space in the new line
+        }
+    }
+
   $nph ||= $self->{'.globals'}->{'NPH'};
   $charset = $self->charset( $charset )
    ;    # get charset (and set new charset if supplied)
