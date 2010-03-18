@@ -515,7 +515,7 @@ sub _parse_multipart {
        = $unfold =~ m/name="?\Q$param\E"?;\s+filename="?([^\"]*)"?/;
 
       if ( defined $filename ) {
-        my ( $mime ) = $unfold =~ m/Content-Type:\s+([-\w\.\/]+)/io;
+        my ( $mime ) = $unfold =~ m/Content-Type:\s+([-\w\+\.\/]+)/io;
         $data =~ s/^\Q$header\E//;
         ( $got_data, $data, my $fh, my $size )
          = $self->_save_tmpfile( $handle, $boundary, $filename,
