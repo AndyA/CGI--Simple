@@ -35,7 +35,8 @@ Content-Type: image/svg+xml\r
 \r
 <svg>fake</svg>\r
 -----------------------------10263292819275730631136676268\r
-Content-Disposition: form-data; name="file2"; filename="spreadsheet.xls"\r Content-Type: application/vnd.ms-excel\r
+Content-Disposition: form-data; name="file2"; filename="spreadsheet.xls"\r 
+Content-Type: application/vnd.ms-excel\r
 \r
 fake\r
 -----------------------------10263292819275730631136676268--\r
