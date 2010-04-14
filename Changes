@@ -174,3 +174,7 @@ Revision history for Perl extension CGI::Simple.
 
 1.112   2009-05-31
       - (thanks bingos) added missing IO::Scalar dependency.
+
+1.113
+      - (thanks to kberov) fixed mimetype matching.
+

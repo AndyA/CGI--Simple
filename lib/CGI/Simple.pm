@@ -3902,7 +3902,7 @@ tommyw, grinder, Jaap, vek, erasei, jlongino and strider_corinth
 
 Thanks for patches to:
 
-Ewan Edwards, Joshua N Pritikin, Mike Barry
+Ewan Edwards, Joshua N Pritikin, Mike Barry, Krasimir Berov
 
 =head1 LICENCE AND COPYRIGHT
 
