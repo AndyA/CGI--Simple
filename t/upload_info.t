@@ -1,4 +1,4 @@
-use Test::More tests => 3 ;
+use Test::More tests => 3;
 use strict;
 use warnings;
 use IO::Scalar;
@@ -46,9 +46,15 @@ $ENV{CONTENT_LENGTH} = length $body;
 
 my $h = IO::Scalar->new( \$body );
 my $q = new CGI::Simple( $h );
-ok($q->upload_info($q->param('file0'), 'mime') eq 'image/png','Guess mime for  image/png' );
-ok($q->upload_info($q->param('file1'), 'mime') eq 'image/svg+xml','Guess mime for  image/svg+xml' );
-ok($q->upload_info($q->param('file2'), 'mime') eq 'application/vnd.ms-excel', 'Guess mime for  application/vnd.ms-excel' );
+ok( $q->upload_info( $q->param( 'file0' ), 'mime' ) eq 'image/png',
+  'Guess mime for  image/png' );
+ok( $q->upload_info( $q->param( 'file1' ), 'mime' ) eq 'image/svg+xml',
+  'Guess mime for  image/svg+xml' );
+ok(
+  $q->upload_info( $q->param( 'file2' ), 'mime' ) eq
+   'application/vnd.ms-excel',
+  'Guess mime for  application/vnd.ms-excel'
+);
 
 #2010-03-19 by Krasimir Berov, based on 041.multipart.t
 

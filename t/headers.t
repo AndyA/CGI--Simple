@@ -14,19 +14,20 @@ use CGI::Simple;
 my $cgi = CGI::Simple->new;
 
 like $cgi->header( -type => "text/html" ),
-    qr#Type: text/html#, 'known header, basic case: type => "text/html"';
+ qr#Type: text/html#, 'known header, basic case: type => "text/html"';
 
 like $cgi->header( -type => "text/html\nevil: stuff" ),
-    qr#Type: text/html\n evil: stuff#, 'known header';
+ qr#Type: text/html\n evil: stuff#, 'known header';
 
 like $cgi->header( -type => "text/html\n evil: stuff " ),
-    qr#Content-Type: text/html\n evil: stuff#, 'known header, with leading and trailing whitespace on the continuation line';
+ qr#Content-Type: text/html\n evil: stuff#,
+ 'known header, with leading and trailing whitespace on the continuation line';
 
 like $cgi->header( -foobar => "text/html\nevil: stuff" ),
-    qr#Foobar: text/html\n evil: stuff#, 'unknown header';
+ qr#Foobar: text/html\n evil: stuff#, 'unknown header';
 
 like $cgi->redirect( -type => "text/html\nevil: stuff" ),
-    qr#Type: text/html\n evil: stuff#, 'redirect w/ known header';
+ qr#Type: text/html\n evil: stuff#, 'redirect w/ known header';
 
 like $cgi->redirect( -foobar => "text/html\nevil: stuff" ),
-    qr#Foobar: text/html\n evil: stuff#, 'redirect w/ unknown header';
+ qr#Foobar: text/html\n evil: stuff#, 'redirect w/ unknown header';

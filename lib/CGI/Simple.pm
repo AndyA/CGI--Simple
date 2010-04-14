@@ -683,12 +683,12 @@ sub keywords {
 sub Vars {
   my $self = shift;
   $self->{'.sep'} = shift || $self->{'.sep'} || "\0";
-  if (wantarray) {
-      my %hash;
-      for my $param ( $self->param ) {
-          $hash{$param} = join $self->{'.sep'}, $self->param( $param );
-      }
-      return %hash;
+  if ( wantarray ) {
+    my %hash;
+    for my $param ( $self->param ) {
+      $hash{$param} = join $self->{'.sep'}, $self->param( $param );
+    }
+    return %hash;
   }
   else {
     my %tied;
@@ -993,19 +993,22 @@ sub header {
     @params
    );
 
-    # CR escaping for values, per RFC 822
-    for my $header ($type,$status,$cookie,$target,$expires,$nph,$charset,$attachment,$p3p,@other) {
-        if (defined $header) {
-            $header =~ s/
+  # CR escaping for values, per RFC 822
+  for my $header (
+    $type, $status,  $cookie,     $target, $expires,
+    $nph,  $charset, $attachment, $p3p,    @other
+   ) {
+    if ( defined $header ) {
+      $header =~ s/
                 (?<=\n)    # For any character proceeded by a newline
                 (?=\S)     # ... that is not whitespace
-            / /xg;         # ... inject a leading space in the new line
-        }
+            / /xg;    # ... inject a leading space in the new line
     }
+  }
 
   $nph ||= $self->{'.globals'}->{'NPH'};
   $charset = $self->charset( $charset )
-   ;    # get charset (and set new charset if supplied)
+   ;                  # get charset (and set new charset if supplied)
    # rearrange() was designed for the HTML portion, so we need to fix it up a little.
 
   for ( @other ) {
