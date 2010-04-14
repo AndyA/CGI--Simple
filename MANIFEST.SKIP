@@ -30,3 +30,4 @@ CGI-Simple-*
 # Temp, old and emacs backup files.
 ^CGI-Simple-
 ^reference
+^MYMETA.yml$
