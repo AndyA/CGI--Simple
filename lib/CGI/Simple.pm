@@ -993,17 +993,26 @@ sub header {
     @params
    );
 
+  my $CRLF = $self->crlf;
+
   # CR escaping for values, per RFC 822
   for my $header (
     $type, $status,  $cookie,     $target, $expires,
     $nph,  $charset, $attachment, $p3p,    @other
    ) {
-    if ( defined $header ) {
-      $header =~ s/
-                (?<=\n)    # For any character proceeded by a newline
-                (?=\S)     # ... that is not whitespace
-            / /xg;    # ... inject a leading space in the new line
-    }
+        if (defined $header) {
+            # From RFC 822:
+            # Unfolding  is  accomplished  by regarding   CRLF   immediately
+            # followed  by  a  LWSP-char  as equivalent to the LWSP-char.
+            $header =~ s/$CRLF(\s)/$1/g;
+
+            # All other uses of newlines are invalid input. 
+            if ($header =~ m/$CRLF/) {
+                # shorten very long values in the diagnostic
+                $header = substr($header,0,72).'...' if (length $header > 72);
+                die "Invalid header value contains a newline not followed by whitespace: $header";
+            }
+        } 
   }
 
   $nph ||= $self->{'.globals'}->{'NPH'};
