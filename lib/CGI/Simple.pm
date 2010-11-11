@@ -1125,7 +1125,14 @@ sub multipart_init {
   my ( $self, @p ) = @_;
   use CGI::Simple::Util qw(rearrange);
   my ( $boundary, @other ) = rearrange( ['BOUNDARY'], @p );
-  $boundary = $boundary || '------- =_aaaaaaaaaa0';
+  if (!$boundary) {
+      $boundary = '------- =_';
+      my @chrs = ('0'..'9', 'A'..'Z', 'a'..'z');
+      for (1..17) {
+          $boundary .= $chrs[rand(scalar @chrs)];
+      }
+  }
+
   my $CRLF = $self->crlf;    # get CRLF sequence
   my $warning
    = "WARNING: YOUR BROWSER DOESN'T SUPPORT THIS SERVER-PUSH TECHNOLOGY.";
