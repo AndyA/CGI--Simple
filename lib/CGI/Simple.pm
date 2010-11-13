@@ -3910,7 +3910,7 @@ tommyw, grinder, Jaap, vek, erasei, jlongino and strider_corinth
 Thanks for patches to:
 
 Ewan Edwards, Joshua N Pritikin, Mike Barry, Michael Nachbaur, Chris
-Williams, Mark Stosberg, Krasimir Berov
+Williams, Mark Stosberg, Krasimir Berov, Yamada Masahiro
 
 =head1 LICENCE AND COPYRIGHT
 

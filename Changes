@@ -177,4 +177,6 @@ Revision history for Perl extension CGI::Simple.
 
 1.113
       - (thanks to kberov) fixed mimetype matching.
+      - (thanks to Yamada Masahiro) randomise multipart boundary string
+        (security).
 
