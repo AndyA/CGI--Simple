@@ -953,10 +953,12 @@ restore_parameters();
 $sv = multipart_init();
 like(
   $sv,
-  qr|Content-Type: multipart/x-mixed-replace;boundary="------- =_aaaaaaaaaa0"|,
+  qr|Content-Type: multipart/x-mixed-replace;boundary="------- =_[a-zA-Z0-9]{17}"|,
   'multipart_init(), 1'
 );
-like( $sv, qr/--------- =_aaaaaaaaaa0$CRLF/, 'multipart_init(), 2' );
+
+like( $sv, qr/--------- =_[a-zA-Z0-9]{17}$CRLF/,
+  'multipart_init(), 2' );
 $sv = multipart_init( 'this_is_the_boundary' );
 like( $sv, qr/boundary="this_is_the_boundary"/, 'multipart_init(), 3' );
 $sv = multipart_init( -boundary => 'this_is_another_boundary' );
