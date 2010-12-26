@@ -1,4 +1,4 @@
-use Test::More tests => 288;
+use Test::More tests => 289;
 use Carp;
 use strict;
 use vars qw(%field %in);
@@ -961,12 +961,19 @@ like( $sv, qr/--------- =_[a-zA-Z0-9]{17}$CRLF/,
   'multipart_init(), 2' );
 $sv = multipart_init( 'this_is_the_boundary' );
 like( $sv, qr/boundary="this_is_the_boundary"/, 'multipart_init(), 3' );
+{
+    my $sv1 = multipart_init();
+    my $sv2 = multipart_init();
+    isnt($sv1,$sv2,"due to random boundaries, multiple calls produce different results");
+}
 $sv = multipart_init( -boundary => 'this_is_another_boundary' );
 like(
   $sv,
   qr/boundary="this_is_another_boundary"/,
   'multipart_init(), 4'
 );
+
+
 
 # multipart_start()
 
