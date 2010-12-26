@@ -171,7 +171,7 @@ __END__
 
 =head1 NAME
 
-CGI::Simple::Cookie - Interface to browse cookies
+CGI::Simple::Cookie - Interface to HTTP cookies
 
 =head1 SYNOPSIS
 
