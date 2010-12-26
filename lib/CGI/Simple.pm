@@ -1071,7 +1071,6 @@ sub header {
    if $attachment;
   push @header, @other;
   push @header, "Content-Type: $type" if $type;
-  my $CRLF = $self->crlf;
   my $header = join $CRLF, @header;
   $header .= $CRLF . $CRLF;    # add the statutory two CRLFs
 
