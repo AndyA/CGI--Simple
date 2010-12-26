@@ -72,13 +72,13 @@ sub raw_fetch {
 sub new {
   my ( $class, @params ) = @_;
   $class = ref( $class ) || $class;
-  my ( $name, $value, $path, $domain, $secure, $expires, $httponly )
+  my ( $name, $value, $path, $domain, $secure, $expires, $max_age, $httponly )
    = rearrange(
     [
       'NAME', [ 'VALUE', 'VALUES' ],
       'PATH',   'DOMAIN',
       'SECURE', 'EXPIRES',
-      'HTTPONLY'
+      'MAX-AGE','HTTPONLY'
     ],
     @params
    );
@@ -92,6 +92,7 @@ sub new {
   $self->domain( $domain )     if defined $domain;
   $self->secure( $secure )     if defined $secure;
   $self->expires( $expires )   if defined $expires;
+  $self->max_age($expires)     if defined $max_age;
   $self->httponly( $httponly ) if defined $httponly;
   return $self;
 }
@@ -105,6 +106,7 @@ sub as_string {
   push @cookie, "domain=" . $self->domain   if $self->domain;
   push @cookie, "path=" . $self->path       if $self->path;
   push @cookie, "expires=" . $self->expires if $self->expires;
+  push @cookie,"max-age=".$self->max_age    if $self->max_age;
   push @cookie, "secure"                    if $self->secure;
   push @cookie, "HttpOnly"                  if $self->httponly;
   return join "; ", @cookie;
@@ -151,6 +153,12 @@ sub expires {
   $self->{'expires'} = CGI::Simple::Util::expires( $expires, 'cookie' )
    if defined $expires;
   return $self->{'expires'};
+}
+
+sub max_age {
+    my ( $self, $max_age ) = @_;
+    $self->{'max-age'} = CGI::Simple::Util::_expire_calc($max_age)-time() if defined $max_age;
+    return $self->{'max-age'};
 }
 
 sub path {
@@ -285,6 +293,14 @@ object serialization protocols for full generality).
 B<-expires> accepts any of the relative or absolute date formats
 recognized by CGI::Simple, for example "+3M" for three months in the
 future.  See CGI::Simple's documentation for details.
+
+B<-max-age> accepts the same data formats as B<< -expires >>, but sets a
+relative value instead of an absolute like B<< -expires >>. This is intended to be
+more secure since a clock could be changed to fake an absolute time. In
+practice, as of 2011, C<< -max-age >> still does not enjoy the widespread support
+that C<< -expires >> has. You can set both, and browsers that support
+C<< -max-age >> should ignore the C<< Expires >> header. The drawback
+to this approach is the bit of bandwidth for sending an extra header on each cookie.
 
 B<-domain> points to a domain name or to a fully qualified host name.
 If not specified, the cookie will be returned only to the Web server
