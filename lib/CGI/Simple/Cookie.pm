@@ -203,7 +203,8 @@ internally), you can use this module independently.
 
 For full information on cookies see:
 
-    http://www.ics.uci.edu/pub/ietf/http/rfc2109.txt
+	http://tools.ietf.org/html/rfc2109
+	http://tools.ietf.org/html/rfc2965
 
 =head1 USING CGI::Simple::Cookie
 
