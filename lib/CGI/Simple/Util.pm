@@ -115,7 +115,8 @@ sub _expire_calc {
   else {
     return $time;
   }
-  return ( time + $offset );
+  my $cur_time = time; 
+  return ( $cur_time+$offset );
 }
 
 sub escapeHTML {

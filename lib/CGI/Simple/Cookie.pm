@@ -72,13 +72,13 @@ sub raw_fetch {
 sub new {
   my ( $class, @params ) = @_;
   $class = ref( $class ) || $class;
-  my ( $name, $value, $path, $domain, $secure, $expires, $httponly )
+  my ( $name, $value, $path, $domain, $secure, $expires, $max_age, $httponly )
    = rearrange(
     [
       'NAME', [ 'VALUE', 'VALUES' ],
       'PATH',   'DOMAIN',
       'SECURE', 'EXPIRES',
-      'HTTPONLY'
+      'MAX-AGE','HTTPONLY'
     ],
     @params
    );
@@ -92,6 +92,7 @@ sub new {
   $self->domain( $domain )     if defined $domain;
   $self->secure( $secure )     if defined $secure;
   $self->expires( $expires )   if defined $expires;
+  $self->max_age($expires)     if defined $max_age;
   $self->httponly( $httponly ) if defined $httponly;
   return $self;
 }
@@ -105,6 +106,7 @@ sub as_string {
   push @cookie, "domain=" . $self->domain   if $self->domain;
   push @cookie, "path=" . $self->path       if $self->path;
   push @cookie, "expires=" . $self->expires if $self->expires;
+  push @cookie,"max-age=".$self->max_age    if $self->max_age;
   push @cookie, "secure"                    if $self->secure;
   push @cookie, "HttpOnly"                  if $self->httponly;
   return join "; ", @cookie;
@@ -153,6 +155,12 @@ sub expires {
   return $self->{'expires'};
 }
 
+sub max_age {
+    my ( $self, $max_age ) = @_;
+    $self->{'max-age'} = CGI::Simple::Util::_expire_calc($max_age)-time() if defined $max_age;
+    return $self->{'max-age'};
+}
+
 sub path {
   my ( $self, $path ) = @_;
   $self->{'path'} = $path if defined $path;
@@ -171,7 +179,7 @@ __END__
 
 =head1 NAME
 
-CGI::Simple::Cookie - Interface to browse cookies
+CGI::Simple::Cookie - Interface to HTTP cookies
 
 =head1 SYNOPSIS
 
@@ -179,31 +187,32 @@ CGI::Simple::Cookie - Interface to browse cookies
     use CGI::Simple::Cookie;
 
     # Create new cookies and send them
-    $cookie1 = new CGI::Simple::Cookie( -name=>'ID', -value=>123456 );
-    $cookie2 = new CGI::Simple::Cookie( -name=>'preferences',
+    $cookie1 = CGI::Simple::Cookie->new( -name=>'ID', -value=>123456 );
+    $cookie2 = CGI::Simple::Cookie->new( -name=>'preferences',
                                         -value=>{ font => Helvetica,
                                                   size => 12 }
                                       );
     print header( -cookie=>[$cookie1,$cookie2] );
 
     # fetch existing cookies
-    %cookies = fetch CGI::Simple::Cookie;
+    %cookies = CGI::Simple::Cookie->fetch;
     $id = $cookies{'ID'}->value;
 
     # create cookies returned from an external source
-    %cookies = parse CGI::Simple::Cookie($ENV{COOKIE});
+    %cookies = CGI::Simple::Cookie->parse($ENV{COOKIE});
 
 =head1 DESCRIPTION
 
 CGI::Simple::Cookie is an interface to HTTP/1.1 cookies, a mechanism
 that allows Web servers to store persistent information on the browser's
 side of the connection. Although CGI::Simple::Cookie is intended to be
-used in conjunction with CGI::Simple.pm (and is in fact used by it
+used in conjunction with CGI::Simple (and is in fact used by it
 internally), you can use this module independently.
 
 For full information on cookies see:
 
-    http://www.ics.uci.edu/pub/ietf/http/rfc2109.txt
+	http://tools.ietf.org/html/rfc2109
+	http://tools.ietf.org/html/rfc2965
 
 =head1 USING CGI::Simple::Cookie
 
@@ -267,7 +276,7 @@ L<http://www.owasp.org/index.php/HTTPOnly>
 
 =head2 Creating New Cookies
 
-    $c = new CGI::Simple::Cookie( -name    =>  'foo',
+    $c = CGI::Simple::Cookie->new( -name    =>  'foo',
                                   -value   =>  'bar',
                                   -expires =>  '+3M',
                                   -domain  =>  '.capricorn.com',
@@ -282,8 +291,16 @@ The value can be a scalar, an array reference, or a hash reference.
 object serialization protocols for full generality).
 
 B<-expires> accepts any of the relative or absolute date formats
-recognized by CGI::Simple.pm, for example "+3M" for three months in the
-future.  See CGI::Simple.pm's documentation for details.
+recognized by CGI::Simple, for example "+3M" for three months in the
+future.  See CGI::Simple's documentation for details.
+
+B<-max-age> accepts the same data formats as B<< -expires >>, but sets a
+relative value instead of an absolute like B<< -expires >>. This is intended to be
+more secure since a clock could be changed to fake an absolute time. In
+practice, as of 2011, C<< -max-age >> still does not enjoy the widespread support
+that C<< -expires >> has. You can set both, and browsers that support
+C<< -max-age >> should ignore the C<< Expires >> header. The drawback
+to this approach is the bit of bandwidth for sending an extra header on each cookie.
 
 B<-domain> points to a domain name or to a fully qualified host name.
 If not specified, the cookie will be returned only to the Web server
@@ -306,7 +323,7 @@ Within a CGI script you can send a cookie to the browser by creating
 one or more Set-Cookie: fields in the HTTP header.  Here is a typical
 sequence:
 
-    $c = new CGI::Simple::Cookie( -name    =>  'foo',
+    $c = CGI::Simple::Cookie->new( -name    =>  'foo',
                                    -value   =>  ['bar','baz'],
                                    -expires =>  '+3M'
                                   );
@@ -318,7 +335,7 @@ To send more than one cookie, create several Set-Cookie: fields.
 Alternatively, you may concatenate the cookies together with "; " and
 send them in one field.
 
-If you are using CGI::Simple.pm, you send cookies by providing a -cookie
+If you are using CGI::Simple, you send cookies by providing a -cookie
 argument to the header() method:
 
   print header( -cookie=>$c );
@@ -337,13 +354,13 @@ representation.  You may call as_string() yourself if you prefer:
 
 =head2 Recovering Previous Cookies
 
-    %cookies = fetch CGI::Simple::Cookie;
+    %cookies = CGI::Simple::Cookie->fetch;
 
 B<fetch> returns an associative array consisting of all cookies
 returned by the browser.  The keys of the array are the cookie names.  You
 can iterate through the cookies this way:
 
-    %cookies = fetch CGI::Simple::Cookie;
+    %cookies = CGI::Simple::Cookie->fetch;
     foreach (keys %cookies) {
         do_something($cookies{$_});
     }
@@ -351,7 +368,7 @@ can iterate through the cookies this way:
 In a scalar context, fetch() returns a hash reference, which may be more
 efficient if you are manipulating multiple cookies.
 
-CGI::Simple.pm uses the URL escaping methods to save and restore reserved
+CGI::Simple uses the URL escaping methods to save and restore reserved
 characters in its cookies.  If you are trying to retrieve a cookie set by
 a foreign server, this escaping method may trip you up.  Use raw_fetch()
 instead, which has the same semantics as fetch(), but performs no unescaping.
@@ -360,7 +377,7 @@ You may also retrieve cookies that were stored in some external
 form using the parse() class method:
 
        $COOKIES = `cat /usr/tmp/Cookie_stash`;
-       %cookies = parse CGI::Simple::Cookie($COOKIES);
+       %cookies = CGI::Simple::Cookie->parse($COOKIES);
 
 =head2 Manipulating Cookies
 
