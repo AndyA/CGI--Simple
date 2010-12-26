@@ -1,6 +1,7 @@
-# This is the original cookie.t file distributed with CGI.pm 2.78
-# The only modification is to change CGI::Cookie to CGI::Simple::Cookie
-# whenever it appears
+# This was forked from the original cookie.t file distributed with CGI.pm 2.78
+# Originally, only modification is to change CGI::Cookie to CGI::Simple::Cookie
+# whenever it appeared. Since then the tests suites for CGI.pm and CGI::Simple
+# have not been kept in sync.
 
 use Test::More tests => 93;
 use strict;
