@@ -198,7 +198,7 @@ CGI::Simple::Cookie - Interface to browse cookies
 CGI::Simple::Cookie is an interface to HTTP/1.1 cookies, a mechanism
 that allows Web servers to store persistent information on the browser's
 side of the connection. Although CGI::Simple::Cookie is intended to be
-used in conjunction with CGI::Simple.pm (and is in fact used by it
+used in conjunction with CGI::Simple (and is in fact used by it
 internally), you can use this module independently.
 
 For full information on cookies see:
@@ -282,8 +282,8 @@ The value can be a scalar, an array reference, or a hash reference.
 object serialization protocols for full generality).
 
 B<-expires> accepts any of the relative or absolute date formats
-recognized by CGI::Simple.pm, for example "+3M" for three months in the
-future.  See CGI::Simple.pm's documentation for details.
+recognized by CGI::Simple, for example "+3M" for three months in the
+future.  See CGI::Simple's documentation for details.
 
 B<-domain> points to a domain name or to a fully qualified host name.
 If not specified, the cookie will be returned only to the Web server
@@ -318,7 +318,7 @@ To send more than one cookie, create several Set-Cookie: fields.
 Alternatively, you may concatenate the cookies together with "; " and
 send them in one field.
 
-If you are using CGI::Simple.pm, you send cookies by providing a -cookie
+If you are using CGI::Simple, you send cookies by providing a -cookie
 argument to the header() method:
 
   print header( -cookie=>$c );
@@ -351,7 +351,7 @@ can iterate through the cookies this way:
 In a scalar context, fetch() returns a hash reference, which may be more
 efficient if you are manipulating multiple cookies.
 
-CGI::Simple.pm uses the URL escaping methods to save and restore reserved
+CGI::Simple uses the URL escaping methods to save and restore reserved
 characters in its cookies.  If you are trying to retrieve a cookie set by
 a foreign server, this escaping method may trip you up.  Use raw_fetch()
 instead, which has the same semantics as fetch(), but performs no unescaping.
