@@ -179,19 +179,19 @@ CGI::Simple::Cookie - Interface to browse cookies
     use CGI::Simple::Cookie;
 
     # Create new cookies and send them
-    $cookie1 = new CGI::Simple::Cookie( -name=>'ID', -value=>123456 );
-    $cookie2 = new CGI::Simple::Cookie( -name=>'preferences',
+    $cookie1 = CGI::Simple::Cookie->new( -name=>'ID', -value=>123456 );
+    $cookie2 = CGI::Simple::Cookie->new( -name=>'preferences',
                                         -value=>{ font => Helvetica,
                                                   size => 12 }
                                       );
     print header( -cookie=>[$cookie1,$cookie2] );
 
     # fetch existing cookies
-    %cookies = fetch CGI::Simple::Cookie;
+    %cookies = CGI::Simple::Cookie->fetch;
     $id = $cookies{'ID'}->value;
 
     # create cookies returned from an external source
-    %cookies = parse CGI::Simple::Cookie($ENV{COOKIE});
+    %cookies = CGI::Simple::Cookie->parse($ENV{COOKIE});
 
 =head1 DESCRIPTION
 
@@ -267,7 +267,7 @@ L<http://www.owasp.org/index.php/HTTPOnly>
 
 =head2 Creating New Cookies
 
-    $c = new CGI::Simple::Cookie( -name    =>  'foo',
+    $c = CGI::Simple::Cookie->new( -name    =>  'foo',
                                   -value   =>  'bar',
                                   -expires =>  '+3M',
                                   -domain  =>  '.capricorn.com',
@@ -306,7 +306,7 @@ Within a CGI script you can send a cookie to the browser by creating
 one or more Set-Cookie: fields in the HTTP header.  Here is a typical
 sequence:
 
-    $c = new CGI::Simple::Cookie( -name    =>  'foo',
+    $c = CGI::Simple::Cookie->new( -name    =>  'foo',
                                    -value   =>  ['bar','baz'],
                                    -expires =>  '+3M'
                                   );
@@ -337,13 +337,13 @@ representation.  You may call as_string() yourself if you prefer:
 
 =head2 Recovering Previous Cookies
 
-    %cookies = fetch CGI::Simple::Cookie;
+    %cookies = CGI::Simple::Cookie->fetch;
 
 B<fetch> returns an associative array consisting of all cookies
 returned by the browser.  The keys of the array are the cookie names.  You
 can iterate through the cookies this way:
 
-    %cookies = fetch CGI::Simple::Cookie;
+    %cookies = CGI::Simple::Cookie->fetch;
     foreach (keys %cookies) {
         do_something($cookies{$_});
     }
@@ -360,7 +360,7 @@ You may also retrieve cookies that were stored in some external
 form using the parse() class method:
 
        $COOKIES = `cat /usr/tmp/Cookie_stash`;
-       %cookies = parse CGI::Simple::Cookie($COOKIES);
+       %cookies = CGI::Simple::Cookie->parse($COOKIES);
 
 =head2 Manipulating Cookies
 
