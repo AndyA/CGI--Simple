@@ -3,6 +3,10 @@
 # whenever it appeared. Since then the tests suites for CGI.pm and CGI::Simple
 # have not been kept in sync.
 
+# to have a consistent baseline, we nail the current time
+# to 100 seconds after the epoch
+BEGIN { *CORE::GLOBAL::time = sub { 100 }; }
+
 use Test::More tests => 98;
 use strict;
 use CGI::Simple::Util qw(escape unescape);
@@ -397,16 +401,13 @@ my @test_cookie = (
 # Max-age
 #----------------------------------------------------------------------------
 
-# to have a consistent baseline, we nail the current time
-# to 100 seconds after the epoch
-*CORE::GLOBAL::time = sub { 100 };
 
 MAX_AGE: {
-    my $cookie = CGI::Simple::Cookie->new( '-expires' => 'now' );
+    my $cookie = CGI::Simple::Cookie->new( -name=>'a', value=>'b', '-expires' => 'now',);
     is $cookie->expires, 'Thu, 01-Jan-1970 00:01:40 GMT';
     is $cookie->max_age => undef, 'max-age is undefined when setting expires';
 
-    my $cookie = CGI::Simple::Cookie->new();
+    my $cookie = CGI::Simple::Cookie->new( -name=>'a', 'value'=>'b' );
     $cookie->max_age( '+4d' );
 
     is $cookie->expires, undef, 'expires is undef when setting max_age';
