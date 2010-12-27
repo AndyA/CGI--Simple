@@ -5,7 +5,9 @@
 
 # to have a consistent baseline, we nail the current time
 # to 100 seconds after the epoch
-BEGIN { *CORE::GLOBAL::time = sub { 100 }; }
+BEGIN {
+  *CORE::GLOBAL::time = sub { 100 };
+}
 
 use Test::More tests => 98;
 use strict;
@@ -396,25 +398,29 @@ my @test_cookie = (
   ok( !$c->httponly,      'httponly attribute is cleared' );
 }
 
-
 #----------------------------------------------------------------------------
 # Max-age
 #----------------------------------------------------------------------------
 
-
 MAX_AGE: {
   {
-    my $cookie = CGI::Simple::Cookie->new( -name=>'a', value=>'b', '-expires' => 'now',);
+    my $cookie = CGI::Simple::Cookie->new(
+      -name      => 'a',
+      value      => 'b',
+      '-expires' => 'now',
+    );
     is $cookie->expires, 'Thu, 01-Jan-1970 00:01:40 GMT';
-    is $cookie->max_age => undef, 'max-age is undefined when setting expires';
+    is $cookie->max_age => undef,
+     'max-age is undefined when setting expires';
   }
 
   {
-    my $cookie = CGI::Simple::Cookie->new( -name=>'a', 'value'=>'b' );
+    my $cookie
+     = CGI::Simple::Cookie->new( -name => 'a', 'value' => 'b' );
     $cookie->max_age( '+4d' );
 
     is $cookie->expires, undef, 'expires is undef when setting max_age';
-    is $cookie->max_age => 4*24*60*60, 'setting via max-age';
+    is $cookie->max_age => 4 * 24 * 60 * 60, 'setting via max-age';
 
     $cookie->max_age( '113' );
     is $cookie->max_age => 13, 'max_age(num) as delta';

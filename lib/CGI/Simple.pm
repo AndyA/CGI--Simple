@@ -1000,24 +1000,26 @@ sub header {
     $type, $status,  $cookie,     $target, $expires,
     $nph,  $charset, $attachment, $p3p,    @other
    ) {
-        if (defined $header) {
-            # From RFC 822:
-            # Unfolding  is  accomplished  by regarding   CRLF   immediately
-            # followed  by  a  LWSP-char  as equivalent to the LWSP-char.
-            $header =~ s/$CRLF(\s)/$1/g;
+    if ( defined $header ) {
+      # From RFC 822:
+      # Unfolding  is  accomplished  by regarding   CRLF   immediately
+      # followed  by  a  LWSP-char  as equivalent to the LWSP-char.
+      $header =~ s/$CRLF(\s)/$1/g;
 
-            # All other uses of newlines are invalid input. 
-            if ($header =~ m/$CRLF/) {
-                # shorten very long values in the diagnostic
-                $header = substr($header,0,72).'...' if (length $header > 72);
-                die "Invalid header value contains a newline not followed by whitespace: $header";
-            }
-        } 
+      # All other uses of newlines are invalid input.
+      if ( $header =~ m/$CRLF/ ) {
+        # shorten very long values in the diagnostic
+        $header = substr( $header, 0, 72 ) . '...'
+         if ( length $header > 72 );
+        die
+         "Invalid header value contains a newline not followed by whitespace: $header";
+      }
+    }
   }
 
   $nph ||= $self->{'.globals'}->{'NPH'};
   $charset = $self->charset( $charset )
-   ;                  # get charset (and set new charset if supplied)
+   ;    # get charset (and set new charset if supplied)
    # rearrange() was designed for the HTML portion, so we need to fix it up a little.
 
   for ( @other ) {

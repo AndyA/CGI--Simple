@@ -72,13 +72,16 @@ sub raw_fetch {
 sub new {
   my ( $class, @params ) = @_;
   $class = ref( $class ) || $class;
-  my ( $name, $value, $path, $domain, $secure, $expires, $max_age, $httponly )
+  my (
+    $name,   $value,   $path,    $domain,
+    $secure, $expires, $max_age, $httponly
+   )
    = rearrange(
     [
       'NAME', [ 'VALUE', 'VALUES' ],
-      'PATH',   'DOMAIN',
-      'SECURE', 'EXPIRES',
-      'MAX-AGE','HTTPONLY'
+      'PATH',    'DOMAIN',
+      'SECURE',  'EXPIRES',
+      'MAX-AGE', 'HTTPONLY'
     ],
     @params
    );
@@ -92,7 +95,7 @@ sub new {
   $self->domain( $domain )     if defined $domain;
   $self->secure( $secure )     if defined $secure;
   $self->expires( $expires )   if defined $expires;
-  $self->max_age($expires)     if defined $max_age;
+  $self->max_age( $expires )   if defined $max_age;
   $self->httponly( $httponly ) if defined $httponly;
   return $self;
 }
@@ -106,7 +109,7 @@ sub as_string {
   push @cookie, "domain=" . $self->domain   if $self->domain;
   push @cookie, "path=" . $self->path       if $self->path;
   push @cookie, "expires=" . $self->expires if $self->expires;
-  push @cookie,"max-age=".$self->max_age    if $self->max_age;
+  push @cookie, "max-age=" . $self->max_age if $self->max_age;
   push @cookie, "secure"                    if $self->secure;
   push @cookie, "HttpOnly"                  if $self->httponly;
   return join "; ", @cookie;
@@ -156,9 +159,11 @@ sub expires {
 }
 
 sub max_age {
-    my ( $self, $max_age ) = @_;
-    $self->{'max-age'} = CGI::Simple::Util::_expire_calc($max_age)-time() if defined $max_age;
-    return $self->{'max-age'};
+  my ( $self, $max_age ) = @_;
+  $self->{'max-age'}
+   = CGI::Simple::Util::_expire_calc( $max_age ) - time()
+   if defined $max_age;
+  return $self->{'max-age'};
 }
 
 sub path {
