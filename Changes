@@ -175,8 +175,62 @@ Revision history for Perl extension CGI::Simple.
 1.112   2009-05-31
       - (thanks bingos) added missing IO::Scalar dependency.
 
-1.113
-      - (thanks to kberov) fixed mimetype matching.
+1.113   2010-12-27
       - (thanks to Yamada Masahiro) randomise multipart boundary string
         (security).
 
+      - Numerous changes from Mark Stosberg:
+
+        Port max-age support from CGI.pm, to improve compatibility and
+        RFC-compliance
+
+        Correct header comment in cookie.t
+        
+        It claims that is a simple copy/paste/modify from CGI.pm's test
+        by the same name, but this has not been true for some time--
+        CGI::Simple added
+
+        httponly tests that CGI.pm lacks, for example.
+
+        Sync cookie references with CGI.pm: add reference to the
+        newer RFC 2695
+
+        "Interface to browse cookies" looks like it was typo for
+        "browser". HTTP is more precise.
+
+        Fix awkward "CGI::Simple.pm" language. It looks like it probably
+        originated from the CGI.pm form. "CGI::Simple" is used instead.
+
+        Best Practice: eliminate indirect object notation from new(),
+        parse() and fetch() calls
+
+        Security: Fix handling of embedded malicious newlines in header
+          values This is a direct port of the same security fix that
+
+        Security: use a random MIME boundary by default in
+          multipart_init(). This is a direct port of the same issue
+          which was addressed in CGI.pm, preventing some kinds of
+          potential header injection attacks.
+
+        Port from CGI.pm: Fix multi-line header parsing.
+          This fix is covered by the tests in t/header.t added in
+          the previous patch. If you run those tests without this
+          patch, you'll see how the headers would be malformed
+          without this fix.
+
+        Port CRLF injection prevention from CGI.pm
+
+        Optimize Vars(): Don't build %hash if we aren't going to use it.
+
+        Micro-optimization to Vars(): Don't call "tie" unless we need to.
+
+      - Numerous changes from K. Berov:
+
+        Added "+" to the mime character class.
+
+        Added tests for C<$mime = $q->upload_info( $filename, 'mime' );>
+
+        Fixed wrong match for mimetypes. Example: matched only
+        'application/vnd' instead of 'application/vnd.ms-excel'.
+
+        Added "\." to the mime character class
