@@ -1,6 +1,6 @@
 package CGI::Simple;
 
-require 5.004;
+require 5.006001;
 
 # this module is both strict (and warnings) compliant, but they are only used
 # in testing as they add an unnecessary compile time overhead in production.
