@@ -234,3 +234,7 @@ Revision history for Perl extension CGI::Simple.
         'application/vnd' instead of 'application/vnd.ms-excel'.
 
         Added "\." to the mime character class
+
+1.114
+      - Drop support for Perls older than 5.6.1.
+
