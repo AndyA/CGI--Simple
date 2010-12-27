@@ -419,6 +419,10 @@ Get or set the cookie's path.
 
 Get or set the cookie's expiration time.
 
+=item B<max_age()>
+
+Get or set the cookie's maximum age.
+
 =item B<secure()>
 
 Get or set the cookie's secure flag.
