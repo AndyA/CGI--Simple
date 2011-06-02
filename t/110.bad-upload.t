@@ -39,6 +39,6 @@ if ( open( CHILD, "|-" ) ) {
   exit 0;
 }
 
-my $q = new CGI::Simple;
+my $q = CGI::Simple->new;
 is( $q->cgi_error, undef, "CGI::Simple can handle this" );
 

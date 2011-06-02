@@ -24,7 +24,7 @@ $ENV{REQUEST_URI}
  = "$ENV{SCRIPT_NAME}$ENV{PATH_INFO}?$ENV{QUERY_STRING}";
 $ENV{HTTP_LOVE} = 'true';
 
-my $q = new CGI::Simple;
+my $q = CGI::Simple->new;
 ok( $q, "CGI::Simple::new()" );
 is( $q->request_method, 'GET', "CGI::Simple::request_method()" );
 
@@ -37,6 +37,8 @@ is( join( ' ', sort $q->param() ),
 is( $q->param( 'game' ),    'chess', "CGI::Simple::param()" );
 is( $q->param( 'weather' ), 'dull',  "CGI::Simple::param()" );
 
+# ensuring that multiple values of the same param keep their original order in the param() call
+# probably as a side effect of just testing other stuff
 is(
   join( ' ', $q->param( 'game' ) ),
   'chess checkers',
@@ -88,7 +90,7 @@ ok( !$q->param( 'foo' ), 'CGI::Simple::delete()' );
 $q->_reset_globals;
 $ENV{QUERY_STRING} = 'mary+had+a+little+lamb';
 
-ok( $q = new CGI::Simple, "CGI::Simple::new() redux" );
+ok( $q = CGI::Simple->new, "CGI::Simple::new() redux" );
 
 is(
   join( ' ', $q->keywords ),
@@ -102,15 +104,15 @@ is(
   'CGI::Simple::keywords'
 );
 
-ok $q = new CGI::Simple( 'foo=bar=baz' ),
+ok $q = CGI::Simple->new( 'foo=bar=baz' ),
  'CGI::Simple::new(), equals in value';
 is $q->param( 'foo' ), 'bar=baz', 'parsed parameter containing equals';
 
-ok( $q = new CGI::Simple( 'foo=bar&foo=baz' ),
+ok( $q = CGI::Simple->new( 'foo=bar&foo=baz' ),
   "CGI::Simple::new() redux" );
 is( $q->param( 'foo' ), 'bar', 'CGI::Simple::param() redux' );
 
-ok( $q = new CGI::Simple( { 'foo' => 'bar', 'bar' => 'froz' } ),
+ok( $q = CGI::Simple->new( { 'foo' => 'bar', 'bar' => 'froz' } ),
   "CGI::Simple::new() redux 2" );
 
 is( $q->param( 'bar' ), 'froz', "CGI::Simple::param() redux 2" );
@@ -141,7 +143,7 @@ SKIP: {
   }
 
   # at this point, we're in a new (child) process
-  ok( $q = new CGI::Simple, "CGI::Simple::new() from POST" );
+  ok( $q = CGI::Simple->new, "CGI::Simple::new() from POST" );
   is( $q->param( 'weather' ), 'nice',
     "CGI::Simple::param() from POST" );
   is( $q->url_param( 'big_balls' ), 'basketball', "CGI::url_param()" );
@@ -159,7 +161,7 @@ SKIP: {
     close CHILD;
     exit 0;
   }
-  ok( $q = new CGI::Simple, "CGI::Simple::new from POST" );
+  ok( $q = CGI::Simple->new, "CGI::Simple::new from POST" );
 
   is( $q->param( 'POSTDATA' ),
     $test_string, "CGI::Simple::param('POSTDATA') from POST" );
@@ -176,7 +178,7 @@ SKIP: {
     close CHILD;
     exit 0;
   }
-  ok( $q = new CGI::Simple, "CGI::Simple::new from POST" );
+  ok( $q = CGI::Simple->new, "CGI::Simple::new from POST" );
 
   is( $q->param( 'POSTDATA' ),
     $test_string, "CGI::Simple::param('POSTDATA') from POST w/nulls" );
@@ -193,7 +195,7 @@ SKIP: {
     close CHILD;
     exit 0;
   }
-  ok( $q = new CGI::Simple, "CGI::Simple::new from PUT" );
+  ok( $q = CGI::Simple->new, "CGI::Simple::new from PUT" );
   is( $q->param( 'PUTDATA' ),
     $test_string, "CGI::Simple::param('POSTDATA') from POST" );
 }

@@ -824,7 +824,7 @@ is(
 
 ################# Header Methods ################
 
-$q = new CGI::Simple
+$q = CGI::Simple->new;
 
  my $CRLF = crlf();
 

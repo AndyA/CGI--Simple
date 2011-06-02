@@ -238,3 +238,8 @@ Revision history for Perl extension CGI::Simple.
 1.114
       - Drop support for Perls older than 5.6.1.
 
+1.115
+      - Replace indirect calling of constructor both in code an documentation
+        with direct calling.
+        Write  CGI::Simle->new   instead of    new CGI::Simple
+

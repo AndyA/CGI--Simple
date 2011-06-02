@@ -128,16 +128,16 @@ sub import {
     my $package = shift;
     my $sub     = shift;
     if ( $sub eq '_cgi_object' ) {    # for debugging get at the object
-      $q = new CGI::Simple( @_ ) unless $q;
+      $q = CGI::Simple->new( @_ ) unless $q;
       return $q;
     }
     if ( !$q or $sub eq 'restore_parameters' ) {
       if ( $sub eq 'restore_parameters' ) {
-        $q = new CGI::Simple( @_ );
+        $q = CGI::Simple->new( @_ );
         return;
       }
       else {
-        $q = new CGI::Simple;
+        $q = CGI::Simple->new;
       }
     }
 
