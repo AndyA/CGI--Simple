@@ -781,14 +781,15 @@ sub upload {
     seek $fh, 0, 0;    # get ready for reading
     return $fh unless $writefile;
     my $buffer;
-    unless ( open OUT, ">$writefile" ) {
+    my $out;
+    unless ( open $out, '>', $writefile ) {
       $self->cgi_error( "500 Can't write to $writefile: $!\n" );
       return undef;
     }
-    binmode OUT;
+    binmode $out;
     binmode $fh;
-    print OUT $buffer while read( $fh, $buffer, 4096 );
-    close OUT;
+    print $out $buffer while read( $fh, $buffer, 4096 );
+    close $out;
     $self->{'.filehandles'}->{$filename} = undef;
     undef $fh;
     return 1;
@@ -1634,6 +1635,9 @@ whereas if you ask for a scalar like this:
 then it returns only the first value (if more than one value for
 'foo' exists).
 
+In case you ased for a list it will return all the values preserving the
+order in which the values of the given key were passed in the request.
+
 Most CGI::Simple routines accept several arguments, sometimes as many as
 10 optional ones!  To simplify this interface, all routines use a named
 argument calling style that looks like this:
@@ -1746,10 +1750,14 @@ it into an object called $q.
 If you provide a file handle to the B<new()> method, it will read
 parameters from the file (or STDIN, or whatever).
 
+Historically people were doing this way:
+
      open FH, "test.in" or die $!;
      $q = CGI::Simple->new(\*FH);
 
-     open $fh, "test.in" or die $!;
+but this is the recommended way:
+
+     open $fh, '<', "test.in" or die $!;
      $q = CGI::Simple->new($fh);
 
 The file should be a series of newline delimited TAG=VALUE pairs.
@@ -1762,7 +1770,7 @@ CGI::Simple::Standard and want to initialize from a file handle,
 the way to do this is with B<restore_parameters()>.  This will (re)initialize
 the default CGI::Simple object from the indicated file handle.
 
-    restore_parameters(\*FH);
+    restore_parameters($fh);
 
 In fact for all intents and purposes B<restore_parameters()> is identical
 to B<new()> Note that B<restore_parameters()> does not exist in
@@ -2011,9 +2019,9 @@ represented as repeated names.  A session record is delimited by a
 single = symbol.  You can write out multiple records and read them
 back in with several calls to B<new()>.
 
-    open FH, "test.in" or die $!;
-    $q1 = CGI::Simple->new(\*FH);  # get the first record
-    $q2 = CGI::Simple->new(\*FH);  # get the next record
+    open my $fh, '<', "test.in" or die $!;
+    $q1 = CGI::Simple->new($fh);  # get the first record
+    $q2 = CGI::Simple->new($fh);  # get the next record
 
 Note: If you wish to use this method from the function-oriented (non-OO)
 interface, the exported name for this method is B<save_parameters()>.
@@ -2021,7 +2029,7 @@ Also if you want to initialize from a file handle, the way to do this is
 with B<restore_parameters()>.  This will (re)initialize
 the default CGI::Simple object from the indicated file handle.
 
-    restore_parameters(\*FH);
+    restore_parameters($fh);
 
 =cut
 
@@ -2071,10 +2079,10 @@ value you get from B<param()> in any way - you don't need to untaint it.
 Now to save the file you would just do something like:
 
     $save_path = '/path/to/write/file.name';
-    open FH, ">$save_path" or die "Oops $!\n";
-    binmode FH;
-    print FH $buffer while read( $fh, $buffer, 4096 );
-    close FH;
+    open my $out, '>', $save_path or die "Oops $!\n";
+    binmode $out;
+    print $out $buffer while read( $fh, $buffer, 4096 );
+    close $out;
 
 By utilizing a new feature of the upload method this process can be
 simplified to:
