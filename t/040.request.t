@@ -2,7 +2,7 @@
 # The only change is to change the use statement and change references
 # from CGI to CGI::Simple
 
-use Test::More tests => 40;
+use Test::More tests => 43;
 use strict;
 use Config;
 
@@ -199,3 +199,16 @@ SKIP: {
   is( $q->param( 'PUTDATA' ),
     $test_string, "CGI::Simple::param('POSTDATA') from POST" );
 }
+
+
+{
+   # ensuring multiple values of the same parameter preserve the order
+   $ENV{QUERY_STRING}    = 'a=1&b=2&a=3&a=4&c=5&b=6';
+   $ENV{REQUEST_METHOD}  = 'GET';
+   my $s = CGI::Simple->new;
+   is_deeply [$s->param( 'a' ) ], [1, 3, 4], 'multiple entries "a"';
+   is_deeply [$s->param( 'b' ) ], [2, 6],    'multiple entries "b"';
+   is_deeply [$s->param( 'c' ) ], [5],       'multiple entries "c"';
+}
+
+
