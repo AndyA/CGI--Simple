@@ -234,7 +234,7 @@ sub utf8_chr ($) {
 }
 
 # We need to define a number of things about the operating environment so
-# we do this on first initialization and store the results in in an object
+# we do this on first initialization and store the results in an object
 BEGIN {
 
   $UTIL = new CGI::Simple::Util;    # initialize our $UTIL object
