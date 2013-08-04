@@ -502,9 +502,9 @@ sub _parse_multipart {
     BOUNDARY:
 
     while ( $data =~ m/^$boundary$CRLF/ ) {
-      ## TAB and high ascii chars are definitivelly allowed in headers.
+      ## TAB and high ascii chars are definitively allowed in headers.
       ## Not accepting them in the following regex prevents the upload of
-      ## files with filenames like "España.txt".
+      ## files with filenames like "Espaï¿½a.txt".
       # next READ unless $data =~ m/^([\040-\176$CRLF]+?$CRLF$CRLF)/o;
       next READ
        unless $data =~ m/^([\x20-\x7E\x80-\xFF\x09$CRLF]+?$CRLF$CRLF)/o;
@@ -1162,7 +1162,7 @@ sub multipart_start {
   my ( $self, @p ) = @_;
   use CGI::Simple::Util qw(rearrange);
   my ( $type, @other ) = rearrange( ['TYPE'], @p );
-  foreach ( @other ) {    # fix return from rearange
+  foreach ( @other ) {    # fix return from rearrange
     next unless my ( $header, $value ) = /([^\s=]+)=\"?(.+?)\"?$/;
     $_ = ucfirst( lc $header ) . ': ' . unescapeHTML( 1, $value );
   }
@@ -1708,7 +1708,7 @@ the '-autoload' option. Under autoload you can use any method you want but
 only import and compile those functions you actually use.
 
 If you do not use autoload you must specify what functions to import. You can
-only use functions that you have imported. For comvenience functions are
+only use functions that you have imported. For convenience, functions are
 grouped into related sets. If you choose to import one or more ':func_set'
 you may have potential namespace collisions so check out the docs to see
 what gets imported. Using the ':all' tag is pretty slack but it is there
