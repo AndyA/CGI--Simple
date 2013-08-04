@@ -367,7 +367,7 @@ method names are aliased to prevent namespace conflicts:
     $q->save(\*FH)      =>  save_parameters(\*FH)
     $q->accept()        =>  Accept()
 
-Although you could use the new() function to genrate new OO CGI::Simple
+Although you could use the new() function to generate new OO CGI::Simple
 objects the restore_parameters() function is a better choice as it operates
 like new but on the correct underlying CGI::Simple object for the functional
 interface.
