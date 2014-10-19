@@ -11,4 +11,4 @@ perl:
   - "5.10"
 before_install:
   - cpanm --notest Test::Version
-  - cpanm --notest Test::DistManifest
+#  - cpanm --notest Test::DistManifest   (should run make manifest before this)
