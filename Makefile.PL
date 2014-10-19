@@ -11,6 +11,7 @@ my %conf = (
   PREREQ_PM     => {
     'Test::More' => 0,
     'Test::NoWarnings' => 0,
+	'Test::Exception'  => 0,
     'IO::Scalar' => 0,
     'File::Temp' => 0,
   },
