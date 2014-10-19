@@ -1,6 +1,7 @@
-use Test::More tests => 5;
 use strict;
 use warnings;
+use Test::More tests => 6;
+use Test::NoWarnings;
 use Config;
 use Data::Dumper;
 use IO::Scalar;

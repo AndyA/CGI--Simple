@@ -10,6 +10,7 @@ my %conf = (
   PL_FILES      => {},
   PREREQ_PM     => {
     'Test::More' => 0,
+    'Test::NoWarnings' => 0,
     'IO::Scalar' => 0
   },
   dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

@@ -9,8 +9,11 @@ BEGIN {
   *CORE::GLOBAL::time = sub { 100 };
 }
 
-use Test::More tests => 98;
 use strict;
+use warnings;
+use Test::More tests => 99;
+use Test::NoWarnings;
+
 use CGI::Simple::Util qw(escape unescape);
 use POSIX qw(strftime);
 

@@ -1,6 +1,7 @@
 package CGI::Simple::Standard;
 
 use strict;
+#use warnings;
 use CGI::Simple;
 use Carp;
 use vars qw( $VERSION $USE_CGI_PM_DEFAULTS $DISABLE_UPLOADS $POST_MAX

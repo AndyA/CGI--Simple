@@ -1,5 +1,6 @@
 package CGI::Simple::Util;
 use strict;
+use warnings;
 use vars qw( $VERSION @EXPORT_OK @ISA $UTIL );
 $VERSION = '1.12';
 require Exporter;

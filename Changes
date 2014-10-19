@@ -245,4 +245,6 @@ Revision history for Perl extension CGI::Simple.
       -    add tests to make sure the order of value is kept as they were passed in the QUERY_STRING
       - new co-maintainer (SZABGAB(
 
+1.12
+      - add 'use warnings' to code and tests.
 

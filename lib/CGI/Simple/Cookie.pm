@@ -11,6 +11,7 @@ package CGI::Simple::Cookie;
 # Interface remains identical and passes all original CGI::Cookie tests
 
 use strict;
+use warnings;
 use vars '$VERSION';
 $VERSION = '1.12';
 use CGI::Simple::Util qw(rearrange unescape escape);

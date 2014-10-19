@@ -5,6 +5,7 @@ require 5.006001;
 # this module is both strict (and warnings) compliant, but they are only used
 # in testing as they add an unnecessary compile time overhead in production.
 use strict;
+#use warnings;
 use Carp;
 
 use vars qw(

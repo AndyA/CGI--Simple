@@ -1,6 +1,8 @@
-use Test::More tests => 289;
-use Carp;
 use strict;
+use warnings;
+use Test::More tests => 290;
+use Test::NoWarnings;
+use Carp;
 use vars qw(%field %in);
 
 use CGI::Simple::Standard qw( :all );
