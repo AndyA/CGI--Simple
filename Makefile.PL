@@ -2,7 +2,7 @@ use strict;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-  ( MM->can( 'signature_target' ) ? ( SIGN => 1 ) : () ),
+  #( MM->can( 'signature_target' ) ? ( SIGN => 1 ) : () ),
   license( 'perl' ),
   NAME          => 'CGI::Simple',
   AUTHOR        => 'Andy Armstrong <andy@hexten.net>',
