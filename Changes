@@ -247,4 +247,6 @@ Revision history for Perl extension CGI::Simple.
 
 1.12
       - add 'use warnings' to code and tests.
+      - use File::Temp to create temporary directory for testing. RT #92833
+      - Test of RT #64160 (CVE-2010-4410 -- CRLF injection and response splitting via header()) added.
 
