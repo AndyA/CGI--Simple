@@ -3,12 +3,14 @@ use warnings;
 use Test::More tests => 320;
 use Test::NoWarnings;
 use Carp;
+use File::Temp qw(tempdir);
 use vars qw(%field %in);
 
 use CGI::Simple;
 
 my ( $q, $sv, @av );
-my $tmpfile = './cgi-tmpfile.tmp';
+my $dir = tempdir( CLEANUP => 1 );
+my $tmpfile = "$dir/cgi-tmpfile.tmp";
 
 $ENV{'AUTH_TYPE'}      = 'PGP MD5 DES rot13';
 $ENV{'CONTENT_LENGTH'} = '42';
