@@ -1,9 +1,8 @@
 use strict;
 use ExtUtils::MakeMaker;
 
-WriteMakefile(
+my %conf = (
   #( MM->can( 'signature_target' ) ? ( SIGN => 1 ) : () ),
-  license( 'perl' ),
   NAME          => 'CGI::Simple',
   AUTHOR        => 'Andy Armstrong <andy@hexten.net>',
   VERSION_FROM  => 'lib/CGI/Simple.pm',
@@ -17,10 +16,23 @@ WriteMakefile(
   clean => { FILES    => 'CGI-Simple-*' },
 );
 
-sub license {
-  my $lic = shift;
-  local $^W = 0;    # Silence warning about non-numeric version
-  return
-   unless $ExtUtils::MakeMaker::VERSION >= '6.31';
-  return ( LICENSE => $lic );
+if (eval { ExtUtils::MakeMaker->VERSION(6.3002) }) {
+	$conf{LICENSE} = 'perl';
 }
+
+if (eval { ExtUtils::MakeMaker->VERSION(6.46) }) {
+	$conf{META_MERGE} = {
+		'meta-spec' => { version => 2 },
+		resources => {
+			repository => {
+				type       => 'git',
+				url        => 'http://github.com/szabgab/CGI--Simple.git',
+				web        => 'http://github.com/szabgab/CGI--Simple',
+				license    => 'http://dev.perl.org/licenses/',
+			},
+		},
+	};
+}
+
+WriteMakefile(%conf);
+
