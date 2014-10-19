@@ -13,7 +13,7 @@ use vars qw(
  $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "1.114";
+$VERSION = "1.115";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
