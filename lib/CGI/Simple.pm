@@ -432,9 +432,10 @@ sub _add_param {
     next
      if $value eq ''
        and $self->{'.globals'}->{'NO_UNDEF_PARAMS'};
-    $value =~ tr/\000//d if $self->{'.globals'}->{'NO_NULL'} and $param ne 'PUTDATA';
+    $value =~ tr/\000//d 
+     if $self->{'.globals'}->{'NO_NULL'} and $param ne 'PUTDATA' and $param ne 'POSTDATA';
     $value = Encode::decode( utf8 => $value )
-     if $self->{'.globals'}->{PARAM_UTF8} and $param ne 'PUTDATA';
+     if $self->{'.globals'}->{PARAM_UTF8} and $param ne 'PUTDATA' and $param ne 'POSTDATA';
     push @{ $self->{$param} }, $value;
     unless ( $self->{'.fieldnames'}->{$param} ) {
       push @{ $self->{'.parameters'} }, $param;
