@@ -432,9 +432,9 @@ sub _add_param {
     next
      if $value eq ''
        and $self->{'.globals'}->{'NO_UNDEF_PARAMS'};
-    $value =~ tr/\000//d if $self->{'.globals'}->{'NO_NULL'};
+    $value =~ tr/\000//d if $self->{'.globals'}->{'NO_NULL'} and $param ne 'PUTDATA';
     $value = Encode::decode( utf8 => $value )
-     if $self->{'.globals'}->{PARAM_UTF8};
+     if $self->{'.globals'}->{PARAM_UTF8} and $param ne 'PUTDATA';
     push @{ $self->{$param} }, $value;
     unless ( $self->{'.fieldnames'}->{$param} ) {
       push @{ $self->{'.parameters'} }, $param;
@@ -505,7 +505,7 @@ sub _parse_multipart {
     while ( $data =~ m/^$boundary$CRLF/ ) {
       ## TAB and high ascii chars are definitivelly allowed in headers.
       ## Not accepting them in the following regex prevents the upload of
-      ## files with filenames like "España.txt".
+      ## files with filenames like "EspaÃ±a.txt".
       # next READ unless $data =~ m/^([\040-\176$CRLF]+?$CRLF$CRLF)/o;
       next READ
        unless $data =~ m/^([\x20-\x7E\x80-\xFF\x09$CRLF]+?$CRLF$CRLF)/o;
