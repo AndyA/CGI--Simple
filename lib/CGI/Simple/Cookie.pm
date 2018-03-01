@@ -13,7 +13,7 @@ package CGI::Simple::Cookie;
 use strict;
 use warnings;
 use vars '$VERSION';
-$VERSION = '1.12';
+$VERSION = '1.13';
 use CGI::Simple::Util qw(rearrange unescape escape);
 use overload '""' => \&as_string, 'cmp' => \&compare, 'fallback' => 1;
 

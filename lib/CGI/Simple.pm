@@ -14,7 +14,7 @@ use vars qw(
  $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "1.12";
+$VERSION = "1.13";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -432,7 +432,7 @@ sub _add_param {
     next
      if $value eq ''
        and $self->{'.globals'}->{'NO_UNDEF_PARAMS'};
-    $value =~ tr/\000//d 
+    $value =~ tr/\000//d
      if $self->{'.globals'}->{'NO_NULL'} and $param ne 'PUTDATA' and $param ne 'POSTDATA';
     $value = Encode::decode( utf8 => $value )
      if $self->{'.globals'}->{PARAM_UTF8} and $param ne 'PUTDATA' and $param ne 'POSTDATA';
@@ -1490,7 +1490,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 1.114.
+This document describes CGI::Simple version 1.13.
 
 =head1 SYNOPSIS
 
@@ -1869,7 +1869,7 @@ in more detail later:
 
 =head2 param() Retrieving non-application/x-www-form-urlencoded data
 
-If POSTed or PUTed data is not of type application/x-www-form-urlencoded or multipart/form-data, 
+If POSTed or PUTed data is not of type application/x-www-form-urlencoded or multipart/form-data,
 then the data will not be processed, but instead be returned as-is in a parameter named POSTDATA
 or PUTDATA.  To retrieve it, use code like this:
 
@@ -3945,4 +3945,3 @@ B<CGI>, L<CGI::Simple::Standard>, L<CGI::Simple::Cookie>,
 L<CGI::Simple::Util>, L<CGI::Minimal>
 
 =cut
-
