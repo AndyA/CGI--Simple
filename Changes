@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Simple.
 
+1.14  2018-03-03 MANWAR
+      - Resolved issue RT #124645 (undeclared dependencies), thanks @SREZIC.
+
 1.13  2018-03-01 MANWAR
       - Merged PR #1, thanks @level420.
       - Tidied Changes file.
