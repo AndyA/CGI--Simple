@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Simple.
 
+1.15  2018-03-04 MANWAR
+      - Resolved issue RT #124646 (use vars â†’ our), thanks @SREZIC.
+
 1.14  2018-03-03 MANWAR
       - Resolved issue RT #124645 (undeclared dependencies), thanks @SREZIC.
 
@@ -155,10 +158,10 @@ Revision history for Perl extension CGI::Simple.
 
 0.077 Tue 23 Nov 2004
       - Bugfix patches.
-      - José Micó supplied patch that relates to character set allowed in headers.
+      - JosÃ© MicÃ³ supplied patch that relates to character set allowed in headers.
         TAB and high ascii chars are definitivelly allowed in headers, and not
-        accepting them prevents the upload of files with filenames like "España.txt".
-      - José Micó also notes that some versions of IE send extra boundaries in
+        accepting them prevents the upload of files with filenames like "EspaÃ±a.txt".
+      - JosÃ© MicÃ³ also notes that some versions of IE send extra boundaries in
         POSTed data before real ones. New patch should be fix this IE issue.
       - Lars Thegler supplied some patches.
       - head2/head3 pod changed to head1/head2 for the benefit of some older
@@ -179,7 +182,7 @@ Revision history for Perl extension CGI::Simple.
         of what to do if 'field_name' is duplicated. You can only ever get one
         fh from this method unlike the favoured approach using param() to get
         the filename(s) which will let you get to all the files.
-      - José Micó deserves plaudits as does PodMaster.
+      - JosÃ© MicÃ³ deserves plaudits as does PodMaster.
 
 0.072 Tue Sept 9 2003
       - Patched issue with large POSTs where data may not be on STDIN for single

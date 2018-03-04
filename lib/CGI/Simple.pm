@@ -8,13 +8,12 @@ use strict;
 #use warnings;
 use Carp;
 
-use vars qw(
- $VERSION $USE_CGI_PM_DEFAULTS $DISABLE_UPLOADS $POST_MAX
- $NO_UNDEF_PARAMS $USE_PARAM_SEMICOLONS $PARAM_UTF8 $HEADERS_ONCE
- $NPH $DEBUG $NO_NULL $FATAL *in
-);
+use vars qw(*in);
+our ($VERSION, $USE_CGI_PM_DEFAULTS, $DISABLE_UPLOADS, $POST_MAX,
+     $NO_UNDEF_PARAMS, $USE_PARAM_SEMICOLONS, $PARAM_UTF8, $HEADERS_ONCE,
+     $NPH, $DEBUG, $NO_NULL, $FATAL);
 
-$VERSION = "1.14";
+$VERSION = "1.15";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -1490,7 +1489,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 1.14.
+This document describes CGI::Simple version 1.15.
 
 =head1 SYNOPSIS
 
