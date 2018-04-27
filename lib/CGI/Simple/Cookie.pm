@@ -96,7 +96,7 @@ sub new {
   $self->domain( $domain )     if defined $domain;
   $self->secure( $secure )     if defined $secure;
   $self->expires( $expires )   if defined $expires;
-  $self->max_age( $expires )   if defined $max_age;
+  $self->max_age( $max_age )   if defined $max_age;
   $self->httponly( $httponly ) if defined $httponly;
   return $self;
 }
@@ -285,6 +285,7 @@ L<http://www.owasp.org/index.php/HTTPOnly>
     $c = CGI::Simple::Cookie->new( -name    =>  'foo',
                                   -value   =>  'bar',
                                   -expires =>  '+3M',
+                                  -max-age =>  '+3M',
                                   -domain  =>  '.capricorn.com',
                                   -path    =>  '/cgi-bin/database',
                                   -secure  =>  1
