@@ -1115,7 +1115,7 @@ sub redirect {
   my @o;
   for ( @other ) { tr/\"//d; push @o, split "=", $_, 2; }
   unshift @o,
-   '-Status'   => '302 Moved',
+   '-Status'   => '302 Found',
    '-Location' => $url,
    '-nph'      => $nph;
   unshift @o, '-Target' => $target if $target;
