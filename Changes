@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Simple.
 
+1.16  2018-07-25 MANWAR
+      - Made t/manifest.t AUTHOR only (RT #125383).
+      - Removed +x bits from test scripts.
+
 1.15  2018-03-04 MANWAR
       - Resolved issue RT #124646 (use vars → our), thanks @SREZIC.
 
