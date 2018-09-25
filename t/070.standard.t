@@ -622,6 +622,7 @@ $upload = join '', <$handle>;
 is( $upload, $data, 'upload( \'/some/path/to/myfile\', \, 2' );
 $sv = upload( '/some/path/to/myfile', "$tmpfile.bak" );
 is( $sv, undef, 'upload( \'/some/path/to/myfile\', \, 3' );
+close($handle);
 unlink $tmpfile, "$tmpfile.bak";
 
 $ENV{'CONTENT_TYPE'} = 'application/x-www-form-urlencoded';
