@@ -643,6 +643,7 @@ $upload = join '', <$handle>;
 is( $upload, $data, 'upload(\'invalid\'), 4' );
 $sv = $q->upload( '/some/path/to/myfile', "$tmpfile.bak" );
 is( $sv, undef, 'upload(\'invalid\'), 5' );
+close($handle);
 unlink $tmpfile, "$tmpfile.bak";
 
 $ENV{'CONTENT_TYPE'} = 'application/x-www-form-urlencoded';
