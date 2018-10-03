@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Simple.
 
+1.18  2018-10-03 MANWAR
+      - Merged pull request #2 from jjatria/samesite, adding
+        SameSite support to Cookie handling.
+
 1.17  2018-10-02 MANWAR
       - Merged pull request #7 from asb-capfan/master, should fix
         CPAN Testers fail report on some windows box.
