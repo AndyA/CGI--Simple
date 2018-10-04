@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Simple.
 
+1.19  2018-10-04 MANWAR
+      - Merged pull request #3 from jjatria/max-age, which sets max-age
+        attribute correctly from constructor.
+
 1.18  2018-10-03 MANWAR
       - Merged pull request #2 from jjatria/samesite, adding
         SameSite support to Cookie handling.
