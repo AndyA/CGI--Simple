@@ -96,7 +96,7 @@ sub new {
   $self->domain( $domain )     if defined $domain;
   $self->secure( $secure )     if defined $secure;
   $self->expires( $expires )   if defined $expires;
-  $self->max_age( $expires )   if defined $max_age;
+  $self->max_age( $max_age )   if defined $max_age;
   $self->httponly( $httponly ) if defined $httponly;
   $self->samesite( $samesite ) if defined $samesite;
   return $self;
@@ -227,8 +227,8 @@ internally), you can use this module independently.
 
 For full information on cookies see:
 
-	http://tools.ietf.org/html/rfc2109
-	http://tools.ietf.org/html/rfc2965
+    http://tools.ietf.org/html/rfc2109
+    http://tools.ietf.org/html/rfc2965
 
 =head1 USING CGI::Simple::Cookie
 
@@ -304,6 +304,7 @@ L<https://tools.ietf.org/html/draft-west-first-party-cookies-07>
     $c = CGI::Simple::Cookie->new( -name    =>  'foo',
                                   -value    =>  'bar',
                                   -expires  =>  '+3M',
+                                  -max-age  =>  '+3M',
                                   -domain   =>  '.capricorn.com',
                                   -path     =>  '/cgi-bin/database',
                                   -secure   =>  1,
