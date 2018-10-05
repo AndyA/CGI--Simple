@@ -921,7 +921,7 @@ is(
 
 $sv     = redirect( 'http://a.galaxy.far.away.gov' );
 $header = <<'HEADER';
-Status: 302 Moved
+Status: 302 Found
 Expires: Tue, 13 Nov 2001 06:45:15 GMT
 Date: Tue, 13 Nov 2001 06:45:15 GMT
 Pragma: no-cache
@@ -937,9 +937,9 @@ is( $sv, $header, 'redirect(), 1' );
 
 $sv = redirect( -uri => 'http://a.galaxy.far.away.gov', -nph => 1 );
 $header = <<'HEADER';
-HTTP/1.0 302 Moved
+HTTP/1.0 302 Found
 Server: Apache - accept no substitutes
-Status: 302 Moved
+Status: 302 Found
 Expires: Tue, 13 Nov 2001 06:49:24 GMT
 Date: Tue, 13 Nov 2001 06:49:24 GMT
 Pragma: no-cache
