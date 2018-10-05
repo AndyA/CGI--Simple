@@ -1,5 +1,9 @@
 Revision history for Perl extension CGI::Simple.
 
+1.20  2018-10-05 MANWAR
+      - Merge pull request #4 from jjatria/302-found, changing the
+        name of 302 statuses from Moved to Found.
+
 1.19  2018-10-04 MANWAR
       - Merged pull request #3 from jjatria/max-age, which sets max-age
         attribute correctly from constructor.
