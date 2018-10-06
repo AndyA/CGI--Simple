@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Simple.
 
+1.21  2018-10-06 MANWAR
+      - Patched issue RT# 67061 (handle warning uninitialsed value).
+
 1.20  2018-10-05 MANWAR
       - Merge pull request #4 from jjatria/302-found, changing the
         name of 302 statuses from Moved to Found.
