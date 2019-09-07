@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Simple.
 
+1.22  2019-09-07 MANWAR
+      - Fixed issue RT# 130454, samesite parameter missing from sub cookie().
+
 1.21  2018-10-06 MANWAR
       - Patched issue RT# 67061 (handle warning uninitialsed value).
 

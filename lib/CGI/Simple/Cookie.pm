@@ -13,7 +13,7 @@ package CGI::Simple::Cookie;
 use strict;
 use warnings;
 use vars '$VERSION';
-$VERSION = '1.21';
+$VERSION = '1.22';
 use CGI::Simple::Util qw(rearrange unescape escape);
 use overload '""' => \&as_string, 'cmp' => \&compare, 'fallback' => 1;
 
@@ -460,6 +460,10 @@ Get or set the cookie's secure flag.
 =item B<httponly()>
 
 Get or set the cookie's HttpOnly flag.
+
+=item B<samesite()>
+
+Get or set the cookie's samesite value.
 
 =back
 
