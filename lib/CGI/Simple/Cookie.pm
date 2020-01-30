@@ -181,7 +181,7 @@ sub httponly {
   return $self->{'httponly'};
 }
 
-my %_legal_samesite = ( Strict => 1, Lax => 1 );
+my %_legal_samesite = ( Strict => 1, Lax => 1, None => 1 );
 sub samesite {
     my $self = shift;
     my $samesite = ucfirst lc +shift if @_; # Normalize casing.
@@ -290,7 +290,7 @@ L<http://www.owasp.org/index.php/HTTPOnly>
 
 =item B<6. samesite flag>
 
-Allowed settings are C<Strict> and C<Lax>.
+Allowed settings are C<Strict>, C<Lax> and C<None>.
 
 As of April 2018, support is limited mostly to recent releases of
 Chrome and Opera.
@@ -344,7 +344,7 @@ cookie only when a cryptographic protocol is in use.
 B<-httponly> if set to a true value, the cookie will not be accessible
 via JavaScript.
 
-B<-samesite> may be C<Lax> or C<Strict> and is an evolving part of the
+B<-samesite> may be C<Lax>, C<Strict> or C<None> and is an evolving part of the
 standards for cookies. Please refer to current documentation regarding it.
 
 =head2 Sending the Cookie to the Browser
