@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Simple.
 
+1.25  2020-02-10 MANWAR
+      - Merged PR #9, thanks @ktat.
+
 1.24  2020-02-07 MANWAR
       - Addressed issue RT #125383 raised by SREZIC.
 
