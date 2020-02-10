@@ -11,7 +11,7 @@ BEGIN {
 
 use strict;
 use warnings;
-use Test::More tests => 113;
+use Test::More tests => 115;
 use Test::NoWarnings;
 
 use CGI::Simple::Util qw(escape unescape);
@@ -423,6 +423,9 @@ my @test_cookie = (
   is( $c->samesite,           'Strict', 'SameSite is correct' );
   is( $c->samesite( 'Lax' ), 'Lax',    'SameSite is set correctly' );
   is( $c->samesite,          'Lax',    'SameSite now returns updated value' );
+
+  is( $c->samesite( 'None' ), 'None',    'SameSite is set correctly' );
+  is( $c->samesite,          'None',    'SameSite now returns updated value' );
 }
 
 #----------------------------------------------------------------------------
