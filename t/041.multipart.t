@@ -1,6 +1,7 @@
-use Test::More tests => 5;
 use strict;
 use warnings;
+use Test::More tests => 6;
+use Test::NoWarnings;
 use Config;
 use Data::Dumper;
 use IO::Scalar;
@@ -40,7 +41,7 @@ EOF
 $ENV{CONTENT_LENGTH} = length $body;
 
 my $h = IO::Scalar->new( \$body );
-my $q = new CGI::Simple( $h );
+my $q = CGI::Simple->new( $h );
 ok( $q, "CGI::Simple::new()" );
 is_deeply(
   [ $q->param ],

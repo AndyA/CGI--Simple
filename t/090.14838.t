@@ -36,6 +36,6 @@ if ( open( CHILD, "|-" ) ) {
 
 $CGI::Simple::DISABLE_UPLOADS = 0;
 
-my $q = new CGI::Simple;
+my $q = CGI::Simple->new;
 is $q->cgi_error, undef, "CGI::Simple can handle this";
 

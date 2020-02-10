@@ -1,5 +1,6 @@
-use Test::More tests => 2;
 use strict;
+use warnings;
+use Test::More tests => 2;
 use Config;
 
 use CGI::Simple;
@@ -30,7 +31,7 @@ SKIP: {
   }
 
   # at this point, we're in a new (child) process
-  $q  = new CGI::Simple;
+  $q  = CGI::Simple->new;
   $sv = $q->param( 'SLOW' );
 
   is( length $sv, 10_000,       'length ok' );

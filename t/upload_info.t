@@ -45,7 +45,7 @@ EOF
 $ENV{CONTENT_LENGTH} = length $body;
 
 my $h = IO::Scalar->new( \$body );
-my $q = new CGI::Simple( $h );
+my $q = CGI::Simple->new( $h );
 ok( $q->upload_info( $q->param( 'file0' ), 'mime' ) eq 'image/png',
   'Guess mime for  image/png' );
 ok( $q->upload_info( $q->param( 'file1' ), 'mime' ) eq 'image/svg+xml',

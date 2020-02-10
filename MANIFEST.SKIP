@@ -31,3 +31,4 @@ CGI-Simple-*
 ^CGI-Simple-
 ^reference
 ^MYMETA.yml$
+^MYMETA.json$
