@@ -6,7 +6,7 @@ my %conf = (
     AUTHOR        => 'Andy Armstrong <andy@hexten.net>',
     VERSION_FROM  => 'lib/CGI/Simple.pm',
     ABSTRACT_FROM => 'lib/CGI/Simple.pm',
-    PREREQ_PM     => {
+    TEST_REQUIRES     => {
         'Test::More'       => 0,
         'Test::NoWarnings' => 0,
         'Test::Exception'  => 0,
@@ -32,6 +32,20 @@ if (eval { ExtUtils::MakeMaker->VERSION(6.46) }) {
                 license => 'http://dev.perl.org/licenses/',
             },
         },
+    };
+}
+
+if (!eval { ExtUtils::MakeMaker->VERSION(6.64) }) {
+    $conf{BUILD_REQUIRES} = {
+        %{ $conf{BUILD_REQUIRES} || {} },
+        %{ delete $conf{TEST_REQUIRES} || {} },
+    };
+}
+
+if (!eval { ExtUtils::MakeMaker->VERSION(6.5503) }) {
+    $conf{PREREQ_PM} = {
+        %{ $conf{PREREQ_PM} || {} },
+        %{ delete $conf{BUILD_REQUIRES} || {} },
     };
 }
 
