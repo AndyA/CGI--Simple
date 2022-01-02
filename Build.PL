@@ -15,7 +15,6 @@ my $builder = MyBuilder->new(
     'Test::More'       => 0,
     'Test::NoWarnings' => 0,
     'Test::Exception'  => 0,
-    'IO::Scalar'       => 0,
     'File::Temp'       => 0,
   },
   add_to_cleanup => ['CGI-Simple-*'],

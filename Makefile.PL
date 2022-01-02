@@ -10,7 +10,6 @@ my %conf = (
         'Test::More'       => 0,
         'Test::NoWarnings' => 0,
         'Test::Exception'  => 0,
-        'IO::Scalar'       => 0,
         'File::Temp'       => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
