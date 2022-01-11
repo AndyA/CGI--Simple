@@ -1,5 +1,8 @@
 Revision history for Perl extension CGI::Simple.
 
+1.280 2022-01-11 MANWAR
+      - Changed the version format from N.nn to N.nnn as requested.
+
 1.27  2022-01-06 MANWAR
       - Removed unneeded Build.PL #11, thanks @haarg.
       - Moved prereqs to correct phase #12, thanks @haarg.
