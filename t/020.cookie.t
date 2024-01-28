@@ -162,15 +162,15 @@ my @test_cookie = (
 
   # Try new with full information provided
   my $c = CGI::Simple::Cookie->new(
-    -name     => 'foo',
-    -value    => 'bar',
-    -expires  => '+3M',
-    -domain   => '.capricorn.com',
-    -path     => '/cgi-bin/database',
-    -secure   => 1,
-    -httponly => 1,
-    -samesite => 'Lax',
-    -priority => 'High',
+    -name       => 'foo',
+    -value      => 'bar',
+    -expires    => '+3M',
+    -domain     => '.capricorn.com',
+    -path       => '/cgi-bin/database',
+    -secure     => 1,
+    -httponly   => 1,
+    -samesite   => 'Lax',
+    -priority   => 'High',
     -partitioned => 1
   );
   is( ref( $c ), 'CGI::Simple::Cookie',
@@ -233,17 +233,17 @@ my @test_cookie = (
 
 {
   my $c = CGI::Simple::Cookie->new(
-    -name      => 'Jam',
-    -value     => 'Hamster',
-    -expires   => '+3M',
-    '-max-age' => '+3M',
-    -domain    => '.pie-shop.com',
-    -path      => '/',
-    -secure    => 1,
-    -httponly  => 1,
-    -samesite  => 'strict'
-    -priority=> 'high',
-    -partitioned=> 1,
+    -name        => 'Jam',
+    -value       => 'Hamster',
+    -expires     => '+3M',
+    '-max-age'   => '+3M',
+    -domain      => '.pie-shop.com',
+    -path        => '/',
+    -secure      => 1,
+    -httponly    => 1,
+    -samesite    => 'strict',
+    -priority    => 'high',
+    -partitioned => 1,
   );
 
   my $name = $c->name;
