@@ -11,8 +11,9 @@ package CGI::Simple::Cookie;
 # Interface remains identical and passes all original CGI::Cookie tests
 
 use strict;
+use warnings;
 use vars '$VERSION';
-$VERSION = '1.114';
+$VERSION = '1.281';
 use CGI::Simple::Util qw(rearrange unescape escape);
 use overload '""' => \&as_string, 'cmp' => \&compare, 'fallback' => 1;
 
@@ -74,14 +75,16 @@ sub new {
   $class = ref( $class ) || $class;
   my (
     $name,   $value,   $path,    $domain,
-    $secure, $expires, $max_age, $httponly
+    $secure, $expires, $max_age, $httponly, $samesite,
+    $priority, $partitioned 
    )
    = rearrange(
     [
       'NAME', [ 'VALUE', 'VALUES' ],
       'PATH',    'DOMAIN',
       'SECURE',  'EXPIRES',
-      'MAX-AGE', 'HTTPONLY'
+      'MAX-AGE', 'HTTPONLY', 'SAMESITE',
+      'PRIORITY', 'PARTITIONED',
     ],
     @params
    );
@@ -91,12 +94,15 @@ sub new {
   $self->name( $name );
   $self->value( $value );
   $path ||= "/";
-  $self->path( $path )         if defined $path;
-  $self->domain( $domain )     if defined $domain;
-  $self->secure( $secure )     if defined $secure;
-  $self->expires( $expires )   if defined $expires;
-  $self->max_age( $expires )   if defined $max_age;
-  $self->httponly( $httponly ) if defined $httponly;
+  $self->path( $path )               if defined $path;
+  $self->domain( $domain )           if defined $domain;
+  $self->secure( $secure )           if defined $secure;
+  $self->expires( $expires )         if defined $expires;
+  $self->max_age( $max_age )         if defined $max_age;
+  $self->httponly( $httponly )       if defined $httponly;
+  $self->samesite( $samesite )       if defined $samesite;
+  $self->priority( $priority )       if defined $priority;
+  $self->partitioned( $partitioned ) if defined $partitioned;  
   return $self;
 }
 
@@ -106,12 +112,15 @@ sub as_string {
   my $name   = escape( $self->name );
   my $value  = join "&", map { escape( $_ ) } $self->value;
   my @cookie = ( "$name=$value" );
-  push @cookie, "domain=" . $self->domain   if $self->domain;
-  push @cookie, "path=" . $self->path       if $self->path;
-  push @cookie, "expires=" . $self->expires if $self->expires;
-  push @cookie, "max-age=" . $self->max_age if $self->max_age;
-  push @cookie, "secure"                    if $self->secure;
-  push @cookie, "HttpOnly"                  if $self->httponly;
+  push @cookie, "domain=" . $self->domain     if $self->domain;
+  push @cookie, "path=" . $self->path         if $self->path;
+  push @cookie, "expires=" . $self->expires   if $self->expires;
+  push @cookie, "max-age=" . $self->max_age   if $self->max_age;
+  push @cookie, "secure"                      if $self->secure;
+  push @cookie, "HttpOnly"                    if $self->httponly;
+  push @cookie, "SameSite=" . $self->samesite if $self->samesite;
+  push @cookie,"Priority=".$self->priority if $self->priority;
+  push @cookie,"Partitioned"               if $self->partitioned;
   return join "; ", @cookie;
 }
 
@@ -178,6 +187,30 @@ sub httponly {
   return $self->{'httponly'};
 }
 
+sub partitioned { # Partitioned
+    my ( $self, $partitioned ) = @_;
+    $self->{'partitioned'} = $partitioned if defined $partitioned;
+    return $self->{'partitioned'};
+}
+
+my %_legal_samesite = ( Strict => 1, Lax => 1, None => 1 );
+sub samesite {
+    my $self = shift;
+    my $samesite = ucfirst lc +shift if @_; # Normalize casing.
+    $self->{'samesite'} = $samesite if $samesite and $_legal_samesite{$samesite};
+    return $self->{'samesite'};
+}
+
+my %_legal_priority = ( Low => 1, Medium => 1, High => 1 );
+sub priority {
+    my $self = shift;
+    my $priority = ucfirst lc +shift if @_;
+    if ($priority && $_legal_priority{$priority}) {
+        $self->{'priority'} = $priority;
+    }
+    return $self->{'priority'};
+}
+
 1;
 
 __END__
@@ -216,9 +249,10 @@ internally), you can use this module independently.
 
 For full information on cookies see:
 
-	http://tools.ietf.org/html/rfc2109
-	http://tools.ietf.org/html/rfc2965
-
+    http://tools.ietf.org/html/rfc2109
+    http://tools.ietf.org/html/rfc2965
+    https://dcthetall.github.io/CHIPS-spec/draft-cutler-httpbis-partitioned-cookies.html
+    
 =head1 USING CGI::Simple::Cookie
 
 CGI::Simple::Cookie is object oriented.  Each cookie object has a name
@@ -267,7 +301,7 @@ that all scripts at your site will receive the cookie.
 If the "secure" attribute is set, the cookie will only be sent to your
 script if the CGI request is occurring on a secure channel, such as SSL.
 
-=item B<4. HttpOnly flag>
+=item B<5. HttpOnly flag>
 
 If the "httponly" attribute is set, the cookie will only be accessible
 through HTTP Requests. This cookie will be inaccessible via JavaScript
@@ -277,16 +311,43 @@ See this URL for more information including supported browsers:
 
 L<http://www.owasp.org/index.php/HTTPOnly>
 
+=item B<6. samesite flag>
+
+Allowed settings are C<Strict>, C<Lax> and C<None>.
+
+As of April 2018, support is limited mostly to recent releases of
+Chrome and Opera.
+
+L<https://tools.ietf.org/html/draft-west-first-party-cookies-07>
+
+=item B<7. priority flag>
+
+This attribute allows servers to specify a retention priority for HTTP cookies 
+that will be respected by user agents during cookie eviction.
+
+Allowed settings are C<Low>, C<Medium> and C<High>.
+
+=item B<8. partitioned flag>
+
+If the "partitioned" attribute is set, the cookie is restricted to the 
+contexts in which a cookie is available to only those whose top-level 
+document is same-site with the top-level document that initiated the 
+request that created the cookie.
+
+L<https://dcthetall.github.io/CHIPS-spec/draft-cutler-httpbis-partitioned-cookies.html>
+
 =back
 
 =head2 Creating New Cookies
 
     $c = CGI::Simple::Cookie->new( -name    =>  'foo',
-                                  -value   =>  'bar',
-                                  -expires =>  '+3M',
-                                  -domain  =>  '.capricorn.com',
-                                  -path    =>  '/cgi-bin/database',
-                                  -secure  =>  1
+                                  -value    =>  'bar',
+                                  -expires  =>  '+3M',
+                                  -max-age  =>  '+3M',
+                                  -domain   =>  '.capricorn.com',
+                                  -path     =>  '/cgi-bin/database',
+                                  -secure   =>  1,
+                                  -samesite =>  'Lax',
                                 );
 
 Create cookies from scratch with the B<new> method.  The B<-name> and
@@ -321,6 +382,9 @@ cookie only when a cryptographic protocol is in use.
 
 B<-httponly> if set to a true value, the cookie will not be accessible
 via JavaScript.
+
+B<-samesite> may be C<Lax>, C<Strict> or C<None> and is an evolving part of the
+standards for cookies. Please refer to current documentation regarding it.
 
 =head2 Sending the Cookie to the Browser
 
@@ -435,6 +499,18 @@ Get or set the cookie's secure flag.
 =item B<httponly()>
 
 Get or set the cookie's HttpOnly flag.
+
+=item B<samesite()>
+
+Get or set the cookie's samesite value.
+
+=item B<priority()>
+
+Get or set the cookie's priority value.
+
+=item B<partitioned()>
+
+Get or set the cookies partitioned flag.
 
 =back
 

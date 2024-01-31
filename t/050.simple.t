@@ -1,12 +1,16 @@
-use Test::More tests => 319;
-use Carp;
 use strict;
+use warnings;
+use Test::More tests => 320;
+use Test::NoWarnings;
+use Carp;
+use File::Temp qw(tempdir);
 use vars qw(%field %in);
 
 use CGI::Simple;
 
 my ( $q, $sv, @av );
-my $tmpfile = './cgi-tmpfile.tmp';
+my $dir = tempdir( CLEANUP => 1 );
+my $tmpfile = "$dir/cgi-tmpfile.tmp";
 
 $ENV{'AUTH_TYPE'}      = 'PGP MD5 DES rot13';
 $ENV{'CONTENT_LENGTH'} = '42';
@@ -39,7 +43,7 @@ $ENV{'SERVER_PORT'}           = '8080';
 $ENV{'SERVER_PROTOCOL'}       = 'HTTP/1.0';
 $ENV{'SERVER_SOFTWARE'}       = 'Apache - accept no substitutes';
 
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 sub undef_globals {
   undef $CGI::Simple::USE_CGI_PM_DEFAULTS;
@@ -158,7 +162,7 @@ is( $CGI::Simple::NO_NULL,              0,  '_reset_globals(), 8' );
 is( $CGI::Simple::FATAL,                -1, '_reset_globals(), 9' );
 undef_globals();
 
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # url_decode() - scalar context, void argument
 $sv = $q->url_decode();
@@ -192,13 +196,13 @@ $q = CGI::Simple->new;
 like( $q, qr/CGI::Simple/, 'new() plain constructor, 1' );
 
 # new('') empty constructor
-$q = new CGI::Simple( '' );
+$q = CGI::Simple->new( '' );
 like( $q, qr/CGI::Simple/, 'new() empty constructor, 1' );
-$q = new CGI::Simple( {} );
+$q = CGI::Simple->new( {} );
 like( $q, qr/CGI::Simple/, 'new() empty constructor, 2' );
 
 # new() hash constructor
-$q = new CGI::Simple( { 'foo' => '1', 'bar' => [ 2, 3, 4 ] } );
+$q = CGI::Simple->new( { 'foo' => '1', 'bar' => [ 2, 3, 4 ] } );
 @av = $q->param;
 
 # fix OS bug with testing
@@ -207,13 +211,13 @@ is( $q->param( 'foo' ), 1, 'new() hash constructor, 2' );
 is( $q->param( 'bar' ), 2, 'new() hash constructor, 3' );
 @av = $q->param( 'bar' );
 is( join( '', @av ), 234, 'new() hash constructor, 4' );
-$q = new CGI::Simple( 'foo=1&bar=2&bar=3&bar=4' );
+$q = CGI::Simple->new( 'foo=1&bar=2&bar=3&bar=4' );
 open FH, ">$tmpfile", or carp "Can't create $tmpfile $!\n";
 $q->save( \*FH );
 close FH;
 
 # new() query string constructor
-$q  = new CGI::Simple( 'foo=5&bar=6&bar=7&bar=8' );
+$q  = CGI::Simple->new( 'foo=5&bar=6&bar=7&bar=8' );
 @av = $q->param;
 is( join( ' ', @av ), 'foo bar', 'new() query string constructor, 1' );
 is( $q->param( 'foo' ), 5, 'new() query string constructor, 2' );
@@ -226,8 +230,8 @@ close FH;
 
 # new() CGI::Simple object constructor
 
-my $q_old = new CGI::Simple( 'foo=1&bar=2&bar=3&bar=4' );
-my $q_new = new CGI::Simple( $q_old );
+my $q_old = CGI::Simple->new( 'foo=1&bar=2&bar=3&bar=4' );
+my $q_new = CGI::Simple->new( $q_old );
 is( $q_old->query_string, 'foo=1&bar=2&bar=3&bar=4',
   'new() CGI::Simple object constructor, 1' );
 is( $q_new->query_string, 'foo=1&bar=2&bar=3&bar=4',
@@ -238,7 +242,7 @@ is( $q_new->query_string, 'foo=1&bar=2&bar=3&bar=4',
 $ENV{'REQUEST_METHOD'} = '';
 $CGI::Simple::DEBUG    = 1;
 @ARGV                  = qw( foo=bar\=baz foo=bar\&baz );
-$q                     = new CGI::Simple;
+$q                     = CGI::Simple->new;
 
 is(
   join( ' ', $q->param( 'foo' ) ),
@@ -249,7 +253,7 @@ $ENV{'REQUEST_METHOD'} = 'GET';
 
 ################ The Core Methods ################
 
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # param() - scalar and array context, void argument
 $sv = $q->param();
@@ -290,7 +294,7 @@ $sv = $q->param( -name => 'invalid' );
 is( $sv, undef, 'param( -name=>\'invalid\' ) get values, 1' );
 is( join( ' ', @av ), '', 'param( -name=>\'invalid\' ) get values, 2' );
 $CGI::Simple::NO_UNDEF_PARAMS = 0;
-$q                            = new CGI::Simple( 'name=&color=' );
+$q                            = CGI::Simple->new( 'name=&color=' );
 
 # param() - scalar and array context, void values void arg
 $sv = $q->param();
@@ -304,7 +308,7 @@ $sv = $q->param( 'name' );
 is( $sv, '', 'param(\'name\') void values 1, valid param, 1' );
 is( join( ' ', @av ),
   '', 'param(\'name\') void values 1, valid param, 2' );
-$q = new CGI::Simple( 'name&color' );
+$q = CGI::Simple->new( 'name&color' );
 
 # param() - scalar and array context, void values void arg
 $sv = $q->param();
@@ -319,7 +323,7 @@ is( $sv, '', 'param(\'name\') void values 2 , valid param, 1' );
 is( join( ' ', @av ),
   '', 'param(\'name\') void values 2 , valid param, 2' );
 $CGI::Simple::NO_UNDEF_PARAMS = 1;
-$q                            = new CGI::Simple( 'name=&color=' );
+$q                            = CGI::Simple->new( 'name=&color=' );
 
 # param() - scalar and array context, void values void arg
 $sv = $q->param();
@@ -334,7 +338,7 @@ is( $sv, undef,
   'param(\'name\') void values 1, valid param, no undef, 1' );
 is( join( ' ', @av ),
   '', 'param(\'name\') void values 1, valid param, no undef, 2' );
-$q = new CGI::Simple( 'name&color' );
+$q = CGI::Simple->new( 'name&color' );
 
 # param() - scalar and array context, void values void arg
 $sv = $q->param();
@@ -350,7 +354,7 @@ is( $sv, undef,
 is( join( ' ', @av ),
   '', 'param(\'name\') void values 2, valid param, no undef, 2' );
 $CGI::Simple::NO_UNDEF_PARAMS = 0;
-$q                            = new CGI::Simple;
+$q                            = CGI::Simple->new;
 
 # param() - scalar and array context, set values
 $sv = $q->param( 'foo', 'some', 'new', 'values' );
@@ -460,7 +464,7 @@ is( join( ' ', @av ),
   '', 'url_param(\'invalid\') single argument (invalid), 2' );
 
 # keywords() - scalar and array context, void argument
-$q  = new CGI::Simple( 'here+are++++some%20keywords' );
+$q  = CGI::Simple->new( 'here+are++++some%20keywords' );
 $sv = $q->keywords;
 @av = $q->keywords;
 is( $sv, '4', 'keywords(), 1' );
@@ -474,7 +478,7 @@ is( join( ' ', @av ),
   'foo bar baz', 'keywords( \'foo\', \'bar\', \'baz\' ), 2' );
 
 # keywords() - scalar and array context, array ref argument
-$q  = new CGI::Simple;
+$q  = CGI::Simple->new;
 $sv = $q->keywords( [ 'foo', 'man', 'chu' ] );
 @av = $q->keywords( [ 'foo', 'man', 'chu' ] );
 is( $sv, '3', 'keywords( [\'foo\', \'man\', \'chu\'] ), 1' );
@@ -485,7 +489,7 @@ is( $sv->{'color'}, "red\0green\0blue", 'Vars() - tied interface, 1' );
 $sv->{'color'} = "foo\0bar\0baz";
 is( join( ' ', $q->param( 'color' ) ),
   'foo bar baz', 'Vars() - tied interface, 2' );
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # Vars() - hash context, void argument
 my %hv = $q->Vars();
@@ -577,7 +581,7 @@ $q->delete_all();
 is( join( '', $q->param ), '', 'delete_all(), 1' );
 is( $q->globals, '11', 'delete_all(), 2' );
 $ENV{'CONTENT_TYPE'} = 'NOT multipart/form-data';
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # delete_all() - scalar and array context, void/invalid/valid argument
 is( join( ' ', $q->param ), 'name color', 'Delete_all(), 1' );
@@ -639,10 +643,11 @@ $upload = join '', <$handle>;
 is( $upload, $data, 'upload(\'invalid\'), 4' );
 $sv = $q->upload( '/some/path/to/myfile', "$tmpfile.bak" );
 is( $sv, undef, 'upload(\'invalid\'), 5' );
+close($handle);
 unlink $tmpfile, "$tmpfile.bak";
 
 $ENV{'CONTENT_TYPE'} = 'application/x-www-form-urlencoded';
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # query_string() - scalar and array context, void/invalid/valid argument
 $sv = $q->query_string();
@@ -685,7 +690,7 @@ is(
 
 ################ Miscelaneous Methods ################
 
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # escapeHTML()
 $sv = $q->escapeHTML();
@@ -724,7 +729,7 @@ is( $q->put( '' ), 1, 'put(), 1' );
 is( $q->print( '' ), 1, 'print(), 1' );
 ################# Cookie Methods ################
 
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # raw_cookie() - scalar and array context, void argument
 $sv = $q->raw_cookie();
@@ -833,7 +838,7 @@ is(
 );
 ################# Header Methods ################
 
-$q = new CGI::Simple
+$q = CGI::Simple->new;
 
  my $CRLF = $q->crlf;
 
@@ -910,7 +915,7 @@ ok( $sv =~ /Date:$1GMT/ . 'cache(1), 4' );
 # redirect() - scalar and array context, void argument
 $sv     = $q->redirect( 'http://a.galaxy.far.away.gov' );
 $header = <<'HEADER';
-Status: 302 Moved
+Status: 302 Found
 Expires: Tue, 13 Nov 2001 06:45:15 GMT
 Date: Tue, 13 Nov 2001 06:45:15 GMT
 Pragma: no-cache
@@ -925,9 +930,9 @@ is( $sv, $header, 'redirect(), 1' );
 # redirect() - scalar and array context, void argument
 $sv = $q->redirect( -uri => 'http://a.galaxy.far.away.gov', -nph => 1 );
 $header = <<'HEADER';
-HTTP/1.0 302 Moved
+HTTP/1.0 302 Found
 Server: Apache - accept no substitutes
-Status: 302 Moved
+Status: 302 Found
 Expires: Tue, 13 Nov 2001 06:49:24 GMT
 Date: Tue, 13 Nov 2001 06:49:24 GMT
 Pragma: no-cache
@@ -1006,13 +1011,13 @@ $ENV{'QUERY_STRING'} = 'name=JaPh%2C&color=red&color=green&color=blue';
 CGI::Simple::ReadParse();
 is( $in{'name'}, 'JaPh,', 'ReadParse(), 1' );
 %in = ();
-$q  = new CGI::Simple;
+$q  = CGI::Simple->new;
 $q->ReadParse();
 is( $in{'name'}, 'JaPh,', 'ReadParse(), 2' );
 CGI::Simple::ReadParse( *field );
 is( $field{'name'}, 'JaPh,', 'ReadParse(), 3' );
 %field = ();
-$q     = new CGI::Simple;
+$q     = CGI::Simple->new;
 $q->ReadParse( *field );
 is( $field{'name'}, 'JaPh,', 'ReadParse(), 4' );
 $q = $field{'CGI'};
@@ -1105,7 +1110,7 @@ like( $q->PrintEnv, qr/PATH_TRANSLATED/, 'PrintEnv(), 1' );
 
 ################ Accessor Methods ################
 
-$q = new CGI::Simple;
+$q = CGI::Simple->new;
 
 # version() - scalar context, void argument
 like( $q->version(), qr/[\d\.]+/, 'version(), 1' );
@@ -1351,7 +1356,7 @@ is( $q->state(), $q->self_url(), 'state(), 1' );
 
 #$CGI::Simple::POST_MAX = 20;
 #$ENV{'REQUEST_METHOD'} = 'POST';
-#$q = new CGI::Simple;
+#$q = CGI::Simple->new;
 #is( $q->cgi_error, '413 Request entity too large: 42 bytes on STDIN exceeds $POST_MAX!' , 'Yet more tests, 1');
 
 $ENV{'REQUEST_METHOD'} = 'HEAD';
@@ -1360,7 +1365,7 @@ $ENV{'REDIRECT_QUERY_STRING'}
  = 'name=JAPH&color=red&color=green&color=blue';
 
 $CGI::Simple::POST_MAX = 50;
-$q                     = new CGI::Simple;
+$q                     = CGI::Simple->new;
 @av                    = $q->param;
 
 is( join( ' ', @av ), 'name color', 'Yet more tests, 2' );

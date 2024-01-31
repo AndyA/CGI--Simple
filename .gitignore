@@ -1,1 +1,7 @@
-MYMETA.yml
+MYMETA.*
+Makefile
+blib
+pm_to_blib
+MANIFEST.bak
+MANIFEST
+/CGI-Simple-*

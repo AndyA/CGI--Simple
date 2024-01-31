@@ -1,13 +1,14 @@
 package CGI::Simple::Standard;
 
 use strict;
+#use warnings;
 use CGI::Simple;
 use Carp;
 use vars qw( $VERSION $USE_CGI_PM_DEFAULTS $DISABLE_UPLOADS $POST_MAX
  $NO_UNDEF_PARAMS $USE_PARAM_SEMICOLONS $HEADERS_ONCE
  $NPH $DEBUG $NO_NULL $FATAL *in %EXPORT_TAGS $AUTOLOAD );
 
-$VERSION = "1.114";
+$VERSION = "1.281";
 
 %EXPORT_TAGS = (
   ':html'     => [qw(:misc)],
@@ -128,16 +129,16 @@ sub import {
     my $package = shift;
     my $sub     = shift;
     if ( $sub eq '_cgi_object' ) {    # for debugging get at the object
-      $q = new CGI::Simple( @_ ) unless $q;
+      $q = CGI::Simple->new( @_ ) unless $q;
       return $q;
     }
     if ( !$q or $sub eq 'restore_parameters' ) {
       if ( $sub eq 'restore_parameters' ) {
-        $q = new CGI::Simple( @_ );
+        $q = CGI::Simple->new( @_ );
         return;
       }
       else {
-        $q = new CGI::Simple;
+        $q = CGI::Simple->new;
       }
     }
 
